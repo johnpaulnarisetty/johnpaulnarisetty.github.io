@@ -1,1456 +1,256 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#5c1226">
-<title>Prova Cega de Vinhos</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍷</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --claret: #7b1830;
-    --claret-deep: #561024;
-    --claret-soft: #f6e8ec;
-    --gold: #f1d48b;
-    --bottle: #1f5a40;
-    --bottle-soft: #e3f1e9;
-    --ink: #23161b;
-    --muted: #6b5a60;
-    --line: #ecdfe3;
-    --paper: #ffffff;
-    --bg: #f8f1f2;
-    --alert: #a3202b;
-    --shadow: 0 1px 2px rgba(60, 20, 35, .06), 0 8px 24px rgba(60, 20, 35, .07);
-    box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  *, *::before, *::after { box-sizing: inherit; }
-  html { font-size: 20px; -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0; color: var(--ink); min-height: 100vh;
-    background: linear-gradient(180deg, #f1dfe4 0, var(--bg) 340px) no-repeat, var(--bg);
-    font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    line-height: 1.45;
-  }
-  #app { max-width: 540px; margin: 0 auto; padding: 14px 16px 64px; }
-  h1, .display { font-family: "Fraunces", Georgia, "Times New Roman", serif; font-weight: 700; letter-spacing: -.01em; }
-  h1 { font-size: 1.9rem; line-height: 1.12; margin: .45em 0 .35em; color: var(--claret-deep); }
-  h2 { font-size: 1.15rem; line-height: 1.25; margin: 0 0 .6em; }
-  p { margin: .4em 0; }
-  .center { text-align: center; }
-  .lead { font-size: 1.1rem; color: var(--muted); }
-  .small { font-size: .85rem; color: var(--muted); }
-
-  .card { background: var(--paper); border-radius: 22px; padding: 20px 18px; margin: 14px 0; box-shadow: var(--shadow); }
-  .ribbon { background: #fbf2de; color: #6b4e0e; border-radius: 14px; padding: 8px 12px; text-align: center; font-weight: 700; font-size: .85rem; margin-bottom: 12px; }
-
-  label, .label { display: block; font-weight: 700; margin: 16px 0 6px; }
-  input, select {
-    width: 100%; font: inherit; font-size: 1.1rem; padding: 14px; color: var(--ink);
-    border: 2px solid #e4d4d9; border-radius: 14px; background: #fff;
-  }
-  input::placeholder { color: #b7a6ab; }
-  input:focus, select:focus { outline: none; border-color: var(--claret); box-shadow: 0 0 0 4px var(--claret-soft); }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
-  button { font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  button:focus-visible { outline: 3px solid var(--claret); outline-offset: 3px; }
-
-  .btn { display: block; width: 100%; min-height: 62px; margin-top: 16px; padding: 14px 18px; border-radius: 16px; border: 2px solid transparent; font-size: 1.1rem; font-weight: 700; transition: transform .08s ease; }
-  .btn:active { transform: translateY(1px); }
-  .btn.primary, .btn.green { background: linear-gradient(180deg, #8c1e3a, var(--claret)); color: #fff; box-shadow: 0 6px 16px rgba(123, 24, 48, .28); }
-  .btn.outline { background: #fff; color: var(--claret); border-color: var(--claret); }
-  .btn:disabled { opacity: .35; box-shadow: none; cursor: default; }
-  .textbtn { display: block; margin: 14px auto 0; background: none; border: none; color: var(--claret); text-decoration: underline; text-underline-offset: 3px; font-size: .95rem; padding: 10px; min-height: 44px; }
-  .smallbtn { background: var(--claret-soft); border: none; border-radius: 12px; padding: 8px 14px; color: var(--claret-deep); font-weight: 700; font-size: .85rem; min-height: 44px; flex: none; }
-
-  .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); font-size: .95rem; }
-  .top .code { display: inline-block; background: var(--paper); color: var(--claret); font-weight: 700; letter-spacing: .14em; padding: 5px 10px 5px 12px; border-radius: 99px; margin-right: 6px; box-shadow: var(--shadow); }
-
-  .brand { text-align: center; padding: 36px 0 8px; }
-  .logo { width: 84px; height: 84px; display: block; margin: 0 auto 6px; filter: drop-shadow(0 8px 16px rgba(86, 16, 36, .25)); }
-  .brand h1 { font-size: 2.2rem; margin: .35em 0 .1em; }
-  .stage { text-align: center; padding: 22px 0 0; }
-  .stage .bigicon { font-size: 3.4rem; line-height: 1; }
-
-  .list-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
-  .list-row:last-child { border-bottom: none; }
-  .sub { display: block; color: var(--muted); font-size: .9rem; }
-  .empty { color: var(--muted); }
-
-  .wine-item { padding: 12px 0; border-bottom: 1px solid var(--line); }
-  .wine-item .acts { display: flex; gap: 8px; margin-top: 8px; }
-  .share-box { background: var(--bg); border-radius: 16px; padding: 12px; margin-top: 10px; }
-  .add-form { margin-top: 6px; }
-
-  .pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
-  .pill { min-height: 52px; padding: 10px 18px; border-radius: 99px; border: 2px solid #e4d4d9; background: #fff; color: var(--ink); font-size: 1rem; font-weight: 700; }
-  .pill.on { background: var(--claret); border-color: var(--claret); color: #fff; }
-  .pill.on::before { content: "✓ "; }
-
-  .steps { padding-left: 1.3em; margin: .2em 0 .4em; font-size: 1.05rem; }
-  .steps li { margin: .55em 0; padding-left: .2em; }
-  .steps li::marker { color: var(--claret); font-weight: 700; }
-
-  .waiting { text-align: center; padding: 22px 18px; border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); color: var(--claret-deep); font-weight: 700; font-size: 1.15rem; margin: 14px 0; }
-  .waiting .small { display: block; font-weight: 400; margin-top: 6px; }
-
-  .invite h2 { margin-bottom: 10px; }
-  #qr { display: flex; justify-content: center; padding: 6px; }
-  #qr img, #qr canvas { max-width: 100%; height: auto; }
-  .bigcode { display: block; text-align: center; font-size: 2.6rem; font-weight: 700; letter-spacing: .28em; color: var(--claret); margin: 6px 0 2px; }
-
-  /* The bottle label with arrows: the one bold element */
-  .label-wrap { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 16px 0 10px; }
-  .arrow { flex: none; width: 56px; height: 72px; border-radius: 16px; border: none; background: var(--paper); box-shadow: var(--shadow); color: var(--claret); font-size: 2rem; font-weight: 700; }
-  .arrow:disabled { opacity: .3; box-shadow: none; cursor: default; }
-  .bottle-label {
-    width: min(210px, 50vw); padding: 14px 10px 12px; text-align: center; background: #fff;
-    border: 3px solid var(--claret); border-radius: 50% / 38%;
-    box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 8px var(--claret), 0 10px 24px rgba(86, 16, 36, .12);
-  }
-  .bottle-label .cap { font-size: .9rem; color: var(--muted); }
-  .bottle-label .num { font-family: "Fraunces", Georgia, serif; font-size: 4.2rem; font-weight: 700; line-height: 1; color: var(--claret-deep); }
-  .bottle-label .of { font-size: .9rem; color: var(--muted); }
-
-  .prompt { text-align: center; font-size: 1.15rem; font-weight: 700; margin: 8px 0; color: var(--claret-deep); }
-  .saved { text-align: center; padding: 10px; border-radius: 14px; background: var(--bottle-soft); color: var(--bottle); font-weight: 700; margin: 8px 0; }
-  .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
-  .score {
-    min-height: 80px; border-radius: 18px; border: 2px solid transparent; background: #fff; color: var(--ink); box-shadow: var(--shadow);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px;
-  }
-  .score .n { font-size: 2.1rem; font-weight: 700; line-height: 1; }
-  .score .left { font-size: .8rem; color: var(--muted); margin-top: 5px; }
-  .score.sel { background: linear-gradient(180deg, #8c1e3a, var(--claret)); color: #fff; box-shadow: 0 6px 16px rgba(123, 24, 48, .3); }
-  .score.sel .left { color: #fff; }
-  .score:disabled { background: transparent; color: #c2b3b8; border: 2px dashed #e4d4d9; box-shadow: none; cursor: default; }
-  .score:disabled .left { color: #c2b3b8; }
-
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { min-width: 60px; padding: 8px 10px; border-radius: 14px; border: 2px solid var(--line); background: #fff; display: flex; flex-direction: column; align-items: center; font-size: .8rem; color: var(--muted); }
-  .chip b { font-size: 1.3rem; color: var(--ink); }
-  .chip.todo { border-style: dashed; }
-  .chip.active { border-color: var(--claret); box-shadow: 0 0 0 2px var(--claret); }
-
-  .tag-num { flex: none; width: 52px; height: 52px; border-radius: 50%; border: 3px solid var(--claret); display: flex; align-items: center; justify-content: center; font-family: "Fraunces", Georgia, serif; font-weight: 700; font-size: 1.4rem; color: var(--claret-deep); background: #fff; }
-  .reveal-row { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; }
-  .reveal-row .rv { flex: 1; min-width: 0; }
-  .reveal-row .sub { margin: 4px 0 0 4px; }
-  .majority { color: var(--bottle); font-weight: 700; }
-
-  .winner { text-align: center; background: linear-gradient(160deg, #8c1e3a 0%, #4a0d1f 100%); color: #fff; border-radius: 26px; padding: 26px 18px 24px; margin: 14px 0; box-shadow: 0 14px 32px rgba(74, 13, 31, .35); }
-  .winner .medal { font-size: 3.2rem; line-height: 1; }
-  .winner .wname { font-family: "Fraunces", Georgia, serif; font-size: 1.9rem; font-weight: 700; line-height: 1.15; margin: 12px 0 4px; }
-  .winner .avg { font-size: 3rem; font-weight: 700; margin-top: 12px; line-height: 1; color: var(--gold); }
-  .winner .soft { opacity: .85; font-size: .9rem; }
-  .reveal { animation: pop .7s ease-out both; }
-  @keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) { .reveal { animation: none; } }
-
-  details.rank { border-bottom: 1px solid var(--line); }
-  details.rank:last-child { border-bottom: none; }
-  details.rank summary { display: flex; align-items: center; gap: 12px; padding: 12px 0; cursor: pointer; list-style: none; }
-  details.rank summary::-webkit-details-marker { display: none; }
-  details.rank summary::after { content: "›"; color: var(--muted); font-size: 1.5rem; line-height: 1; transition: transform .2s ease; }
-  details.rank[open] summary::after { transform: rotate(90deg); }
-  .rk { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--claret-soft); color: var(--claret-deep); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; }
-  .rk.medal { background: none; font-size: 2rem; }
-  .rank .info { flex: 1; min-width: 0; }
-  .rank .av { font-size: 1.4rem; font-weight: 700; color: var(--claret-deep); text-align: right; line-height: 1.1; }
-  .rank .avl { display: block; font-size: .7rem; font-weight: 400; color: var(--muted); }
-  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .stat { background: var(--bg); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; min-width: 0; }
-  .stat .ic { font-size: 1.6rem; line-height: 1; }
-  .stat .st { font-size: .8rem; color: var(--muted); margin-top: 6px; }
-  .stat b { font-size: 1.05rem; line-height: 1.2; margin-top: 2px; overflow-wrap: anywhere; color: var(--claret-deep); }
-  .stat .sd { font-size: .8rem; color: var(--muted); margin-top: 2px; }
-  .rank .more { padding: 0 4px 14px 56px; }
-  .mine-tag { display: inline-block; background: var(--bottle-soft); color: var(--bottle); font-size: .75rem; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-left: 6px; vertical-align: middle; }
-  .nrow { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; font-size: 1rem; }
-  .nrow b { color: var(--claret-deep); }
-  .facts { background: var(--bg); border-radius: 12px; padding: 8px 10px; margin: 4px 0 8px; font-size: .9rem; }
-  .ok { color: var(--bottle); font-weight: 700; }
-  .bad { color: var(--alert); }
-
-  #toast {
-    position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 140%);
-    width: min(520px, calc(100% - 28px)); padding: 16px 18px; border-radius: 16px; font-weight: 700; font-size: 1.05rem;
-    background: var(--alert); color: #fff; box-shadow: 0 10px 30px rgba(40, 10, 20, .3); transition: transform .25s ease; z-index: 10; text-align: center;
-  }
-  #toast.ok { background: var(--bottle); }
-  #toast.show { transform: translate(-50%, 0); }
-  #toast:not(.show) { visibility: hidden; transition: transform .25s ease, visibility 0s .25s; }
-
-  /* In-app dialog (replaces the browser's "site says..." boxes) */
-  #modal { position: fixed; inset: 0; background: rgba(40, 12, 22, .5); display: flex; align-items: flex-end; justify-content: center; z-index: 20; padding: 16px; }
-  #modal[hidden] { display: none; }
-  #modal .sheet { background: #fff; border-radius: 26px; padding: 24px 18px 18px; width: min(520px, 100%); max-height: 85vh; overflow: auto; font-size: 1.15rem; box-shadow: 0 20px 50px rgba(40, 12, 22, .3); }
-  #modal .sheet ul { padding-left: 1.2em; margin: .5em 0; }
-  #modal .btns { display: flex; gap: 12px; }
-  #modal .btns .btn { flex: 1; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eden Duo - Nintendo Switch Emulator for Dual-Screen Android Handhelds</title>
+    <meta name="description" content="Download Eden Duo, a Nintendo Switch emulator for Android dual-screen handhelds like the AYN Thor. Enjoy live companion screens on your second display. Free download available.">
+    <meta name="keywords" content="Eden Duo, Nintendo Switch emulator, Android emulator, dual-screen handheld, AYN Thor, Switch emulator download, play Switch games on Android, yuzu fork">
+    <meta property="og:title" content="Eden Duo - Nintendo Switch Emulator for Dual-Screen Android Handhelds">
+    <meta property="og:description" content="Download Eden Duo, a Nintendo Switch emulator for Android dual-screen handhelds like the AYN Thor. Enjoy live companion screens on your second display.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/johnpaulnarisetty/eden-duo/releases">
+    <meta property="og:image" content="src/android/app/src/main/res/drawable/ic_yuzu.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Eden Duo - Nintendo Switch Emulator for Dual-Screen Android Handhelds">
+    <meta name="twitter:description" content="Download Eden Duo, a Nintendo Switch emulator for Android dual-screen handhelds like the AYN Thor. Enjoy live companion screens on your second display.">
+    <meta name="twitter:image" content="src/android/app/src/main/res/drawable/ic_yuzu.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-weight: 800;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            color: #4a5568;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            font-weight: 700;
+        }
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 150px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            transition: transform 0.2s;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+        .badge:hover {
+            transform: translateY(-2px);
+        }
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.4);
+            margin: 30px auto;
+            display: block;
+            width: fit-content;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(245, 87, 108, 0.5);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature-card {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-card h3 {
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .highlight {
+            background: #ebf4ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            margin: 20px 0;
+        }
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+            color: #718096;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8em; }
+            .features { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-<div id="app"><p class="center lead" style="margin-top:40vh">A carregar…</p></div>
-<div id="toast" role="status" aria-live="polite"></div>
-<div id="modal" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mText">
-  <div id="mText"></div>
-  <div class="btns"><button class="btn outline" id="mNo">Cancelar</button><button class="btn primary" id="mYes">Sim</button></div>
-</div></div>
-
-<datalist id="dl-country">
-  <option>Portugal</option><option>Espanha</option><option>França</option><option>Itália</option><option>Alemanha</option>
-  <option>Áustria</option><option>Grécia</option><option>Argentina</option><option>Chile</option><option>Brasil</option>
-  <option>Uruguai</option><option>Estados Unidos</option><option>África do Sul</option><option>Austrália</option><option>Nova Zelândia</option>
-</datalist>
-<datalist id="dl-region">
-  <option>Douro</option><option>Porto</option><option>Vinho Verde</option><option>Trás-os-Montes</option><option>Dão</option>
-  <option>Bairrada</option><option>Beira Interior</option><option>Távora-Varosa</option><option>Lisboa</option><option>Tejo</option>
-  <option>Península de Setúbal</option><option>Alentejo</option><option>Algarve</option><option>Madeira</option><option>Açores</option>
-  <option>Colares</option><option>Bucelas</option><option>Rioja</option><option>Ribera del Duero</option><option>Rías Baixas</option>
-  <option>Priorat</option><option>Bordéus</option><option>Borgonha</option><option>Champagne</option><option>Ródano</option>
-  <option>Loire</option><option>Toscana</option><option>Piemonte</option><option>Mendoza</option>
-</datalist>
-<datalist id="dl-grape">
-  <option>Touriga Nacional</option><option>Touriga Franca</option><option>Tinta Roriz</option><option>Aragonez</option><option>Tinta Barroca</option>
-  <option>Tinto Cão</option><option>Sousão</option><option>Baga</option><option>Castelão</option><option>Trincadeira</option>
-  <option>Alicante Bouschet</option><option>Jaen</option><option>Alfrocheiro</option><option>Tinta Miúda</option><option>Syrah</option>
-  <option>Cabernet Sauvignon</option><option>Merlot</option><option>Pinot Noir</option><option>Tempranillo</option><option>Alvarinho</option>
-  <option>Loureiro</option><option>Avesso</option><option>Arinto</option><option>Encruzado</option><option>Antão Vaz</option>
-  <option>Fernão Pires</option><option>Bical</option><option>Maria Gomes</option><option>Verdelho</option><option>Gouveio</option>
-  <option>Viosinho</option><option>Rabigato</option><option>Malvasia Fina</option><option>Moscatel</option><option>Chardonnay</option>
-  <option>Sauvignon Blanc</option><option>Sercial</option>
-</datalist>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-/* Firebase settings for the "prova-vinhos" project */
-const firebaseConfig = {
-  apiKey: "AIzaSyB6nrk86BwFaabgN4bET2LJ2pSsdqzcG9U",
-  authDomain: "prova-vinhos.firebaseapp.com",
-  projectId: "prova-vinhos",
-  storageBucket: "prova-vinhos.firebasestorage.app",
-  messagingSenderId: "812350894582",
-  appId: "1:812350894582:web:64ad0c5295e6b1615257d7"
-};
-
-/* Phases of a tasting:
-   setup   -> everyone joins and registers the bottles they brought (a bottle can belong to several people)
-   prep    -> list is closed; wines go into identical bottles, which are shuffled and numbered by hand
-   tasting -> everyone scores any bottle, in any order, and may guess its details; ends when everyone scored everything
-   reveal  -> everyone says which wine was in each numbered bottle; the majority decides
-   done    -> everyone sees the results
-
-   Data: events/{code} with subcollections guests, wines and ratings.
-   ratings/{guestId} = { scores: {n: 0-10}, guesses: {n: {...}}, reveal: {n: wineId} } */
-
-const MAX_SCORE = 10;   // scores go from 0 to 10
-const PER_SCORE = 2;    // each score can be given at most twice
-const MAX_WINES = 20;   // 11 scores x 2 = 22, enough for 20 bottles
-
-/* Only phones that opened the host link (?anfitriao=...) can create tastings.
-   This is the SHA-256 of that secret, so the secret itself is not in the page. */
-/* Bump APP_VERSION and write the same text in version.txt on every change, so phones pick up the new page. */
-const APP_VERSION = '2026-10-12.5';
-
-const HOST_HASH = '49214f3a6d9f8fdf74917bea9434172be1b120fa94d96739f5c2c57320a5e5dd';
-
-const PARAMS = new URLSearchParams(location.search);
-const DEMO = PARAMS.has('demo');
-
-const $app = document.getElementById('app');
-const $toast = document.getElementById('toast');
-let fs = null;
-
-const S = {
-  view: 'home', joinCode: null, canCreate: false, hostKey: null,
-  code: null, guestId: null, hostPin: null, isHost: false,
-  event: null, guests: [], wines: [], ratings: {}, guesses: {}, reveals: {}, guestsLoaded: false,
-  sel: null, showGuess: false, showMore: false, shareEdit: null, pending: false, unsub: [],
-  lastKey: null, clearDraft: false
-};
-
-/* ---------- small helpers ---------- */
-const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const val = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
-const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
-const fmt = v => v == null ? '–' : v.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const listPt = a => a.length <= 1 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' e ' + a[a.length - 1];
-const SKEY = 'blindWineTasting.v2';
-const SESSION_DAYS = 2; // a saved tasting is only reopened for a couple of days
-function loadSession() {
-  try {
-    const s = JSON.parse(localStorage.getItem(SKEY));
-    return s && s.savedAt && Date.now() - s.savedAt < SESSION_DAYS * 864e5 ? s : null;
-  } catch (e) { return null; }
-}
-function saveSession() { if (DEMO) return; try { localStorage.setItem(SKEY, JSON.stringify({ code: S.code, guestId: S.guestId, hostPin: S.hostPin, savedAt: Date.now() })); } catch (e) {} }
-function clearSession() { if (DEMO) return; try { localStorage.removeItem(SKEY); } catch (e) {} }
-// The address always says which tasting this phone is in; the host link keeps its key, so a reload stays a host link.
-function setUrl(code) {
-  if (DEMO) return;
-  const q = new URLSearchParams();
-  if (code) q.set('e', code);
-  if (S.hostKey) q.set('anfitriao', S.hostKey);
-  try { history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '')); } catch (e) {}
-}
-const evRef = () => fs.collection('events').doc(S.code);
-const wineRef = id => evRef().collection('wines').doc(id);
-const myRatingRef = () => evRef().collection('ratings').doc(S.guestId);
-const guestName = id => { const g = S.guests.find(x => x.id === id); return g ? g.name : 'alguém que saiu'; };
-const activeGuests = () => S.guests.filter(g => !g.left);
-const myScores = () => S.ratings[S.guestId] || {};
-const owners = w => Array.isArray(w.guestIds) && w.guestIds.length ? w.guestIds : (w.guestId ? [w.guestId] : []);
-const owns = (w, id) => owners(w).indexOf(id) >= 0;
-const broughtBy = w => listPt(owners(w).map(guestName));
-const buzz = p => { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} };
-const maxScore = () => (S.event && S.event.maxScore) || MAX_SCORE;
-const perScore = () => (S.event && S.event.perScore) || PER_SCORE;
-
-let toastTimer = null;
-function toast(text, kind) {
-  $toast.textContent = text;
-  $toast.className = 'show' + (kind === 'ok' ? ' ok' : '');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { $toast.className = kind === 'ok' ? 'ok' : ''; }, 4000);
-}
-
-/* In-app dialog. ask() resolves true/false; tell() only has an OK button. */
-const $modal = document.getElementById('modal');
-function ask(html, yes, no) {
-  return new Promise(resolve => {
-    document.getElementById('mText').innerHTML = html;
-    const bYes = document.getElementById('mYes'), bNo = document.getElementById('mNo');
-    bYes.textContent = yes || 'Sim';
-    bNo.textContent = no || 'Cancelar';
-    bNo.style.display = no === null ? 'none' : '';
-    const done = v => { $modal.hidden = true; bYes.onclick = bNo.onclick = null; resolve(v); };
-    bYes.onclick = () => done(true);
-    bNo.onclick = () => done(false);
-    $modal.hidden = false;
-    bYes.focus();
-  });
-}
-const tell = html => ask(html, 'OK', null);
-
-function randCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ'; // no I or O, easy to read
-  let c = ''; for (let i = 0; i < 4; i++) c += chars[Math.floor(Math.random() * chars.length)];
-  return c;
-}
-function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-async function sha256(s) {
-  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
-  return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
-}
-
-/* ---------- wine details and guesses ---------- */
-const FIELDS = [
-  { k: 'name', label: 'Nome' },
-  { k: 'country', label: 'País', list: 'dl-country' },
-  { k: 'region', label: 'Região', list: 'dl-region' },
-  { k: 'year', label: 'Ano', mode: 'numeric', half: true },
-  { k: 'abv', label: 'Teor alcoólico (%)', mode: 'decimal', half: true },
-  { k: 'grapes', label: 'Castas', list: 'dl-grape', hint: 'ex.: Touriga Nacional, Tinta Roriz' }
-];
-const DETAIL_FIELDS = FIELDS.filter(f => f.k !== 'name');
-const norm = s => String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9.,]+/g, ' ').trim();
-const textHit = (g, r) => { g = norm(g); r = norm(r); return !!g && !!r && (g === r || (g.length >= 3 && r.indexOf(g) >= 0) || (r.length >= 3 && g.indexOf(r) >= 0)); };
-const splitGrapes = s => String(s || '').split(/[,;/+]|\se\s/i).map(x => x.trim()).filter(Boolean);
-const toNum = s => { const v = parseFloat(String(s == null ? '' : s).replace(',', '.')); return isNaN(v) ? null : v; };
-const factsLine = w => [w.country, w.region, w.year, w.abv ? String(w.abv).replace('.', ',') + '%' : '', w.grapes].filter(Boolean).join(' · ');
-
-// null when there is nothing to compare; otherwise { ok, note }
-function judge(k, guess, wine) {
-  const real = wine[k];
-  if (guess == null || !String(guess).trim() || real == null || !String(real).trim()) return null;
-  if (k === 'year') return { ok: parseInt(guess, 10) === parseInt(real, 10) };
-  if (k === 'abv') { const a = toNum(guess), b = toNum(real); return { ok: a != null && b != null && Math.abs(a - b) <= 0.5 }; }
-  if (k === 'grapes') {
-    const realList = splitGrapes(real), hits = splitGrapes(guess).filter(g => realList.some(r => textHit(g, r))).length;
-    return { ok: hits > 0, note: hits + ' de ' + realList.length };
-  }
-  return { ok: textHit(guess, real) };
-}
-
-/* Keep the screen on while the tasting is running, so nobody has to unlock the phone every time. */
-let wakeLock = null, wakeBusy = false;
-async function syncWakeLock() {
-  if (!('wakeLock' in navigator) || wakeBusy) return;
-  const want = !!(S.event && ['prep', 'tasting', 'reveal'].indexOf(S.event.phase) >= 0) && document.visibilityState === 'visible';
-  wakeBusy = true;
-  try {
-    if (want && !wakeLock) {
-      wakeLock = await navigator.wakeLock.request('screen');
-      wakeLock.addEventListener('release', () => { wakeLock = null; });
-    } else if (!want && wakeLock) {
-      await wakeLock.release(); wakeLock = null;
-    }
-  } catch (e) {} finally { wakeBusy = false; }
-}
-document.addEventListener('visibilitychange', syncWakeLock);
-
-/* Firestore sometimes loses its connection and then waits half a minute before trying again, so the phone
-   misses live changes. If this phone's data has not been confirmed by the server for a few seconds, or the
-   screen has just come back on, reconnect at once. Reconnecting costs no extra reads. */
-let staleTimer = null, outOfSync = false;
-function reconnect() {
-  clearTimeout(staleTimer); staleTimer = null;
-  if (DEMO || !fs || !fs.disableNetwork) return;
-  fs.disableNetwork().then(() => fs.enableNetwork()).catch(() => {});
-  staleTimer = setTimeout(() => { staleTimer = null; if (outOfSync) reconnect(); }, 8000);
-}
-function watchSync(snap) {
-  outOfSync = snap.metadata.fromCache;
-  if (!outOfSync) { clearTimeout(staleTimer); staleTimer = null; }
-  else if (!staleTimer) staleTimer = setTimeout(reconnect, 4000);
-}
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.code) reconnect(); });
-
-/* ---------- live data ---------- */
-function stopEvent() {
-  S.unsub.forEach(u => { try { u(); } catch (e) {} });
-  clearTimeout(staleTimer); staleTimer = null; outOfSync = false;
-  Object.assign(S, { unsub: [], code: null, guestId: null, hostPin: null, isHost: false, event: null, guests: [], wines: [], ratings: {}, guesses: {}, reveals: {}, guestsLoaded: false, sel: null, showGuess: false, showMore: false, shareEdit: null });
-  clearSession();
-  syncWakeLock();
-}
-
-function subscribe() {
-  const ev = evRef();
-  const onErr = err => { console.error(err); toast('Sem ligação. Verifique a internet.'); };
-  if (!DEMO) {
-    S.unsub.push(ev.onSnapshot({ includeMetadataChanges: true }, watchSync, () => {}));
-    // The first poll opened while the listeners start up can get stuck for ~30 s without the SDK noticing.
-    // Reconnecting once, after start-up settles, replaces it with a healthy one.
-    const t = setTimeout(reconnect, 3000);
-    S.unsub.push(() => clearTimeout(t));
-  }
-  S.unsub.push(ev.onSnapshot(snap => {
-    if (!snap.exists) { stopEvent(); setUrl(null); S.view = 'home'; toast('Esta prova já terminou.'); render(true); return; }
-    const prev = S.event;
-    S.event = snap.data();
-    S.isHost = !!(S.hostPin && S.event.hostPin === S.hostPin);
-    const moved = prev && prev.phase !== S.event.phase;
-    if (moved) {
-      S.shareEdit = null; S.showGuess = false; S.sel = null;
-      const ph = S.event.phase;
-      if (ph === 'tasting' && prev.phase === 'prep') { toast('A prova começou!', 'ok'); buzz([80, 80, 80]); }
-      else if (ph === 'reveal') buzz([80, 80, 80]);
-      else if (ph === 'done') buzz([150, 80, 150]);
-    }
-    render();
-    if (moved) window.scrollTo(0, 0);
-  }, onErr));
-  S.unsub.push(ev.collection('guests').onSnapshot(q => {
-    S.guests = q.docs.map(d => Object.assign({ id: d.id }, d.data())).sort((a, b) => (a.joinedAt || 0) - (b.joinedAt || 0));
-    S.guestsLoaded = true;
-    if (S.guestId && !S.guests.some(g => g.id === S.guestId)) {
-      const code = S.code; stopEvent(); S.joinCode = code; S.view = 'join'; setUrl(code);
-      toast('Escreva o seu nome para entrar.'); render(true); return;
-    }
-    render();
-  }, onErr));
-  S.unsub.push(ev.collection('wines').onSnapshot(q => {
-    S.wines = q.docs.map(d => Object.assign({ id: d.id }, d.data())).sort((a, b) => (a.number || 0) - (b.number || 0) || (a.createdAt || 0) - (b.createdAt || 0));
-    render();
-  }, onErr));
-  S.unsub.push(ev.collection('ratings').onSnapshot(q => {
-    const r = {}, g = {}, v = {};
-    q.docs.forEach(d => { const x = d.data(); r[d.id] = x.scores || {}; g[d.id] = x.guesses || {}; v[d.id] = x.reveal || {}; });
-    S.ratings = r; S.guesses = g; S.reveals = v; render();
-  }, onErr));
-}
-
-async function findOrCreateGuest(code, name) {
-  const gc = fs.collection('events').doc(code).collection('guests');
-  const snap = await gc.get();
-  const same = snap.docs.find(d => (d.data().name || '').trim().toLowerCase() === name.toLowerCase());
-  if (same) { // same name = same person coming back
-    if (same.data().left) await gc.doc(same.id).update({ left: false });
-    return same.id;
-  }
-  const ref = await gc.add({ name, joinedAt: Date.now() });
-  return ref.id;
-}
-
-function enterEvent(code, guestId, pin) {
-  S.code = code; S.guestId = guestId; S.hostPin = pin || null;
-  saveSession(); setUrl(code); subscribe(); render(true);
-}
-
-async function newEvent(code, name) {
-  const ev = fs.collection('events').doc(code);
-  const g = ev.collection('guests').doc();
-  const pin = String(Math.floor(1000 + Math.random() * 9000));
-  await ev.set({ createdAt: Date.now(), hostPin: pin, hostGuest: g.id, phase: 'setup', current: 0, total: 0, maxScore: MAX_SCORE, perScore: PER_SCORE });
-  await g.set({ name, joinedAt: Date.now() });
-  return { gid: g.id, pin };
-}
-
-/* Who has not scored what yet (only people still at the table). */
-function missingVotes() {
-  const total = S.event.total, out = [];
-  activeGuests().forEach(g => {
-    const sc = S.ratings[g.id] || {}, miss = [];
-    for (let k = 1; k <= total; k++) if (sc[k] == null) miss.push(k);
-    if (miss.length) out.push({ g, miss });
-  });
-  return out;
-}
-
-/* Reveal by majority: count every person's "bottle k is wine X" votes and give each bottle the most-voted
-   wine that is still free. Ties go to the host's vote, then to the order the wines were registered. */
-function majority() {
-  const tally = {}, order = {};
-  S.wines.forEach((w, i) => { order[w.id] = i; });
-  Object.keys(S.reveals).forEach(gid => {
-    const map = S.reveals[gid] || {};
-    Object.keys(map).forEach(k => {
-      const wid = map[k];
-      if (!wid || order[wid] == null) return;
-      const key = k + '|' + wid;
-      const t = tally[key] || (tally[key] = { k: +k, wid, n: 0, host: 0 });
-      t.n++; if (S.event.hostGuest && gid === S.event.hostGuest) t.host = 1;
-    });
-  });
-  const byBottle = {}, used = {};
-  Object.values(tally).sort((a, b) => b.n - a.n || b.host - a.host || order[a.wid] - order[b.wid]).forEach(t => {
-    if (t.k > S.event.total || byBottle[t.k] || used[t.wid]) return;
-    byBottle[t.k] = t; used[t.wid] = true;
-  });
-  return byBottle;
-}
-function bottlesWithoutMajority() {
-  const m = majority(), left = [];
-  for (let k = 1; k <= S.event.total; k++) if (!m[k]) left.push(k);
-  return left;
-}
-
-function firstUnscored() {
-  const mine = myScores();
-  for (let k = 1; k <= S.event.total; k++) if (mine[k] == null) return k;
-  return 1;
-}
-
-/* ---------- actions (buttons) ---------- */
-const A = {
-  home() { S.view = 'home'; render(true); },
-  goCreate() { S.view = 'create'; render(true); },
-  goHostLogin() { S.view = 'hostLogin'; render(true); },
-
-  goJoin() {
-    const c = val('code').toUpperCase().replace(/[^A-Z]/g, '');
-    if (c.length !== 4) return toast('Escreva o código da prova (4 letras).');
-    S.joinCode = c; S.view = 'join'; render(true);
-  },
-
-  async join() {
-    const name = val('name');
-    if (!name) return toast('Escreva o seu nome.');
-    const code = S.joinCode;
-    const ev = await fs.collection('events').doc(code).get();
-    if (!ev.exists) { S.view = 'home'; setUrl(null); render(true); return toast('Não existe nenhuma prova com o código ' + code + '.'); }
-    const gid = await findOrCreateGuest(code, name);
-    const old = loadSession();
-    const pin = old && old.code === code ? old.hostPin : null;
-    enterEvent(code, gid, pin);
-  },
-
-  async create() {
-    if (!S.canCreate) return toast('Só o anfitrião pode criar provas.');
-    const name = val('name');
-    if (!name) return toast('Escreva o seu nome.');
-    let code = null;
-    for (let i = 0; i < 10; i++) {
-      const c = randCode();
-      const s = await fs.collection('events').doc(c).get();
-      if (!s.exists) { code = c; break; }
-    }
-    if (!code) return toast('Não funcionou. Tente outra vez.');
-    const r = await newEvent(code, name);
-    enterEvent(code, r.gid, r.pin);
-  },
-
-  async hostLogin() {
-    const code = val('code').toUpperCase().replace(/[^A-Z]/g, '');
-    const pin = val('pin'), name = val('name');
-    if (code.length !== 4 || !pin || !name) return toast('Preencha os três campos.');
-    const ev = await fs.collection('events').doc(code).get();
-    if (!ev.exists) return toast('Não existe nenhuma prova com o código ' + code + '.');
-    if (ev.data().hostPin !== pin) return toast('O PIN do anfitrião não está correto.');
-    const gid = await findOrCreateGuest(code, name);
-    enterEvent(code, gid, pin);
-  },
-
-
-  pill(d, el) {
-    const on = !el.classList.contains('on');
-    el.classList.toggle('on', on); el.setAttribute('aria-pressed', on);
-  },
-  toggleMore() { S.showMore = !S.showMore; render(true); },
-
-  async addWine() {
-    if (S.wines.length >= MAX_WINES) return toast('Já há ' + MAX_WINES + ' garrafas, o máximo.');
-    const name = val('wName');
-    if (!name) return toast('Escreva o nome do vinho.');
-    const picked = Array.from(document.querySelectorAll('#newOwners .pill.on')).map(b => b.dataset.gid);
-    const ids = S.isHost ? picked : [S.guestId].concat(picked.filter(g => g !== S.guestId));
-    if (!ids.length) return toast('Escolha de quem é a garrafa.');
-    const wine = { guestId: ids[0], guestIds: ids, name, number: null, createdAt: Date.now() };
-    DETAIL_FIELDS.forEach(f => { wine[f.k] = val('w_' + f.k); });
-    wine.year = wine.year.replace(/\D/g, '').slice(0, 4);
-    await evRef().collection('wines').add(wine);
-    S.clearDraft = true; S.showMore = false; render(true);
-    toast('Garrafa registada.', 'ok');
-  },
-
-  async delWine(d) {
-    const w = S.wines.find(x => x.id === d.id);
-    if (!w || !await ask('Remover a garrafa <b>' + esc(w.name) + '</b>?', 'Remover')) return;
-    if (S.shareEdit === d.id) S.shareEdit = null;
-    await wineRef(d.id).delete();
-  },
-
-  editOwners(d) { S.shareEdit = S.shareEdit === d.id ? null : d.id; render(true); },
-
-  async toggleOwner(d) {
-    const w = S.wines.find(x => x.id === d.id);
-    if (!w) return;
-    let ids = owners(w).slice();
-    if (ids.indexOf(d.gid) >= 0) {
-      if (ids.length === 1) return toast('Escolha pelo menos uma pessoa.');
-      ids = ids.filter(x => x !== d.gid);
-    } else ids.push(d.gid);
-    if (!S.isHost && ids.indexOf(S.guestId) < 0) S.shareEdit = null;
-    await wineRef(w.id).update({ guestIds: ids, guestId: ids[0] });
-  },
-
-  async delGuest(d) {
-    if (!await ask('Remover <b>' + esc(guestName(d.id)) + '</b>?', 'Remover')) return;
-    const b = fs.batch();
-    b.delete(evRef().collection('guests').doc(d.id));
-    b.delete(evRef().collection('ratings').doc(d.id));
-    S.wines.filter(w => owns(w, d.id)).forEach(w => {
-      const rest = owners(w).filter(x => x !== d.id);
-      if (rest.length) b.update(wineRef(w.id), { guestIds: rest, guestId: rest[0] });
-      else b.delete(wineRef(w.id));
-    });
-    await b.commit();
-  },
-
-  // During the tasting someone who went home can be taken out of the "still missing" list.
-  async markLeft(d) {
-    if (!await ask('<b>' + esc(guestName(d.id)) + '</b> já saiu?', 'Já saiu')) return;
-    await evRef().collection('guests').doc(d.id).update({ left: true });
-  },
-
-  async closeList() {
-    const n = S.wines.length;
-    if (n < 2) return toast('São precisas pelo menos 2 garrafas.');
-    if (!await ask('Fechar a lista com <b>' + n + ' garrafas</b>?', 'Fechar')) return;
-    const b = fs.batch();
-    S.wines.forEach(w => b.update(wineRef(w.id), { number: null }));
-    b.update(evRef(), { phase: 'prep', current: 0, total: n, maxScore: MAX_SCORE, perScore: PER_SCORE });
-    await b.commit();
-  },
-
-  async backToSetup() {
-    if (!await ask('Voltar à lista de garrafas?', 'Voltar')) return;
-    await evRef().update({ phase: 'setup' });
-  },
-
-  async beginTasting() {
-    if (!await ask('Começar a prova?', 'Começar')) return;
-    await evRef().update({ phase: 'tasting', startedAt: Date.now() });
-  },
-
-  go(d) {
-    const n = parseInt(d.n, 10);
-    if (n >= 1 && n <= S.event.total) { S.sel = n; render(true); }
-  },
-  toggleGuess() { S.showGuess = !S.showGuess; render(true); },
-
-  async score(d) {
-    const n = S.sel;
-    const s = parseInt(d.s, 10);
-    const mine = myScores();
-    const usedElsewhere = Object.keys(mine).filter(k => +k !== n && mine[k] === s).length;
-    if (usedElsewhere >= perScore()) return toast('Já deu ' + s + ' a ' + perScore() + ' vinhos.');
-    buzz(25);
-    S.ratings[S.guestId] = Object.assign({}, mine, { [n]: s });
-    render(true);
-    // Not awaited: Firestore keeps the score on the phone and sends it in the background,
-    // so a slow connection never blocks the next tap.
-    myRatingRef().set({ scores: { [n]: s } }, { merge: true })
-      .catch(err => { console.error(err); toast('Nota não guardada. Toque outra vez.'); });
-    const me = S.guests.find(g => g.id === S.guestId);
-    if (me && me.left) evRef().collection('guests').doc(S.guestId).update({ left: false }).catch(() => {});
-  },
-
-  async finish() {
-    const miss = missingVotes();
-    if (miss.length) {
-      return tell('<b>Falta votar:</b><ul>' + miss.map(m =>
-        `<li>${esc(m.g.name)}: ${m.miss.length === 1 ? 'vinho ' : 'vinhos '}${listPt(m.miss.map(String))}</li>`).join('') + '</ul>');
-    }
-    if (!await ask('Terminar a prova?', 'Terminar')) return;
-    await evRef().update({ phase: 'reveal' });
-  },
-
-  async showResults() {
-    const left = bottlesWithoutMajority();
-    if (left.length) return tell('Falta escolher o vinho da garrafa ' + listPt(left.map(String)) + '.');
-    if (!await ask('Mostrar os resultados?', 'Mostrar')) return;
-    const m = majority();
-    const b = fs.batch();
-    S.wines.forEach(w => {
-      let n = null;
-      Object.keys(m).forEach(k => { if (m[k].wid === w.id) n = +k; });
-      if (w.number !== n) b.update(wineRef(w.id), { number: n });
-    });
-    b.update(evRef(), { phase: 'done', finishedAt: Date.now() });
-    await b.commit();
-  },
-
-  async backToTasting() {
-    if (!await ask('Voltar à prova?', 'Voltar')) return;
-    await evRef().update({ phase: 'tasting' });
-  },
-
-  async reopen() {
-    if (!await ask('Voltar à revelação?', 'Voltar')) return;
-    await evRef().update({ phase: 'reveal' });
-  },
-
-  async leave() {
-    if (DEMO) { if (await ask('Recomeçar a demonstração?', 'Recomeçar')) location.reload(); return; }
-    if (!await ask('Sair da prova?', 'Sair')) return;
-    stopEvent(); setUrl(null); S.view = 'home'; render(true);
-  },
-
-  async newTasting() {
-    if (!await ask('Criar uma nova prova?', 'Criar')) return;
-    stopEvent(); setUrl(null); S.view = 'create'; render(true);
-  }
-};
-
-async function saveGuess(n) {
-  const g = {};
-  FIELDS.forEach(f => { g[f.k] = val('g_' + f.k); });
-  const all = Object.assign({}, S.guesses[S.guestId] || {});
-  all[n] = g; S.guesses[S.guestId] = all;
-  await myRatingRef().set({ guesses: { [n]: g } }, { merge: true });
-}
-
-async function saveRevealVote(k, wineId) {
-  const total = S.event.total, mine = Object.assign({}, S.reveals[S.guestId] || {}), full = {};
-  for (let i = 1; i <= total; i++) {
-    let v = mine[i] || '';
-    if (wineId && v === wineId) v = '';   // a wine can only be in one bottle
-    full[i] = i === k ? (wineId || '') : v;
-  }
-  S.reveals[S.guestId] = full;
-  await myRatingRef().set({ reveal: full }, { merge: true });
-}
-
-/* ---------- screens ---------- */
-const LOGO = `<svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
-  <circle cx="32" cy="32" r="32" fill="#7b1830"/>
-  <path d="M21 13h22c0 13-3.6 21.5-11 22.4C24.6 34.5 21 26 21 13z" fill="#fff"/>
-  <path d="M22.4 22h19.2c-1 7.4-4.1 12.4-9.6 13-5.5-.6-8.6-5.6-9.6-13z" fill="#c2405f"/>
-  <rect x="30.8" y="35" width="2.4" height="11" rx="1" fill="#fff"/>
-  <rect x="24" y="45.5" width="16" height="3" rx="1.5" fill="#fff"/></svg>`;
-
-function homeView() {
-  const brand = `<div class="brand">${LOGO}<h1>Prova Cega de Vinhos</h1></div>`;
-  // Host link: the host only creates tastings (or gets back to one); guests use the plain link with a code.
-  if (S.canCreate) {
-    return `${brand}
-    <button class="btn primary" data-act="goCreate">Nova prova</button>
-    <button class="textbtn" data-act="goHostLogin">Recuperar uma prova</button>`;
-  }
-  return `${brand}
-  <div class="card">
-    <label for="code" style="margin-top:0">Código da prova</label>
-    <input id="code" data-keep maxlength="4" autocapitalize="characters" autocomplete="off" placeholder="ex.: KTRB" data-enter="goJoin">
-    <button class="btn primary" data-act="goJoin">Entrar</button>
-  </div>`;
-}
-
-
-function joinView() {
-  return `
-  <div class="brand">${LOGO}<h1>Bem-vindo</h1>
-    <p class="lead">Prova <b>${esc(S.joinCode)}</b></p></div>
-  <div class="card">
-    <label for="name" style="margin-top:0">O seu nome</label>
-    <input id="name" data-keep autocomplete="given-name" maxlength="40" data-enter="join">
-    <button class="btn primary" data-act="join">Entrar</button>
-  </div>
-  <button class="textbtn" data-act="home">Voltar</button>`;
-}
-
-function createView() {
-  return `
-  <div class="brand">${LOGO}<h1>Nova prova</h1></div>
-  <div class="card">
-    <label for="name" style="margin-top:0">O seu nome</label>
-    <input id="name" data-keep autocomplete="given-name" maxlength="40" data-enter="create">
-    <button class="btn primary" data-act="create">Criar</button>
-  </div>
-  <button class="textbtn" data-act="home">Voltar</button>`;
-}
-
-function hostLoginView() {
-  return `
-  <div class="brand">${LOGO}<h1>Recuperar prova</h1></div>
-  <div class="card">
-    <label for="code" style="margin-top:0">Código da prova</label>
-    <input id="code" data-keep maxlength="4" autocapitalize="characters" autocomplete="off">
-    <label for="pin">PIN</label>
-    <input id="pin" data-keep inputmode="numeric" maxlength="4" autocomplete="off">
-    <label for="name">O seu nome</label>
-    <input id="name" data-keep autocomplete="given-name" maxlength="40" data-enter="hostLogin">
-    <button class="btn green" data-act="hostLogin">Entrar</button>
-  </div>
-  <button class="textbtn" data-act="home">Voltar</button>`;
-}
-
-function topBar(me) {
-  return `<div class="top"><span><span class="code">${esc(S.code)}</span>${esc(me.name)}</span>
-    <button class="smallbtn" data-act="leave">Sair</button></div>`;
-}
-
-// Inputs for country, region, year, abv, grapes (and the name, for guesses).
-function fieldInputs(fields, prefix, values, extra) {
-  const one = f => `<div><label for="${prefix + f.k}">${f.label}</label>
-    <input id="${prefix + f.k}" ${extra(f)} maxlength="80" value="${esc(values[f.k] || '')}"
-      ${f.list ? `list="${f.list}"` : ''} ${f.mode ? `inputmode="${f.mode}"` : ''} ${f.hint ? `placeholder="${esc(f.hint)}"` : ''} autocomplete="off"></div>`;
-  let html = '', i = 0;
-  while (i < fields.length) {
-    if (fields[i].half && fields[i + 1] && fields[i + 1].half) { html += `<div class="grid2">${one(fields[i])}${one(fields[i + 1])}</div>`; i += 2; }
-    else { html += one(fields[i]); i++; }
-  }
-  return html;
-}
-
-/* --- setup: registering bottles --- */
-function ownerPills(list, isOn, act, extra) {
-  return `<div class="pills">${list.map(g => `<button class="pill${isOn(g.id) ? ' on' : ''}" aria-pressed="${isOn(g.id)}"
-    data-act="${act}" data-gid="${esc(g.id)}"${extra || ''}>${esc(g.name)}</button>`).join('')}</div>`;
-}
-
-function winesCard() {
-  const list = S.isHost ? S.wines : S.wines.filter(w => owns(w, S.guestId));
-  const others = S.guests.filter(g => g.id !== S.guestId);
-  const full = S.wines.length >= MAX_WINES;
-  const item = w => {
-    const open = S.shareEdit === w.id;
-    return `<div class="wine-item">
-      <b>${esc(w.name)}</b>
-      ${factsLine(w) ? `<span class="sub">${esc(factsLine(w))}</span>` : ''}
-      ${S.isHost || owners(w).length > 1 ? `<span class="sub">de ${esc(broughtBy(w))}</span>` : ''}
-      <div class="acts">
-        ${S.guests.length > 1 ? `<button class="smallbtn" data-act="editOwners" data-id="${esc(w.id)}">${open ? 'Fechar' : 'Pessoas'}</button>` : ''}
-        <button class="smallbtn" data-act="delWine" data-id="${esc(w.id)}">Remover</button></div>
-      ${open ? `<div class="share-box"><b>De quem é?</b>
-        ${ownerPills(S.guests, id => owns(w, id), 'toggleOwner', ` data-id="${esc(w.id)}"`)}
-        <button class="btn outline" data-act="editOwners" data-id="${esc(w.id)}">Feito</button></div>` : ''}
-    </div>`;
-  };
-
-  const ownersField = S.isHost
-    ? `<span class="label">De quem é?</span>
-       <div id="newOwners">${ownerPills(S.guests, id => id === S.guestId, 'pill')}</div>`
-    : others.length
-      ? `<span class="label">A meias com</span>
-         <div id="newOwners">${ownerPills(others, () => false, 'pill')}</div>`
-      : '';
-
-  return `<div class="card">
-    <h2>${S.isHost ? 'Garrafas (' + S.wines.length + ')' : 'As suas garrafas'}</h2>
-    ${list.length ? list.map(item).join('') : '<p class="empty">Nenhuma garrafa.</p>'}
-    ${full ? `<p class="small">Máximo de ${MAX_WINES} garrafas.</p>` : `<div class="add-form">
-      <label for="wName">Nova garrafa</label>
-      <input id="wName" data-keep maxlength="80" placeholder="Nome do vinho" data-enter="addWine">
-      ${S.showMore
-        ? fieldInputs(DETAIL_FIELDS, 'w_', {}, () => 'data-keep')
-        : '<button class="textbtn" style="margin:4px 0 0" data-act="toggleMore">+ País, região, ano, castas</button>'}
-      ${ownersField}
-      <button class="btn primary" data-act="addWine">Registar</button></div>`}
-  </div>`;
-}
-
-function setupView(me) {
-  if (!S.isHost) {
-    return `${topBar(me)}
-    ${winesCard()}
-    <div class="waiting">À espera de todos</div>`;
-  }
-  const url = location.origin + location.pathname + '?e=' + S.code;
-  const invite = `<div class="card host center invite">
-        <h2>Entrar na prova</h2>
-        <div id="qr" aria-label="Código QR para entrar"></div>
-        <span class="bigcode">${esc(S.code)}</span>
-        <p class="small">${esc(url.replace(/^https?:\/\//, '').replace(/\/?\?.*$/, ''))} · PIN ${esc(S.event.hostPin)}</p>
-      </div>`;
-  return `${topBar(me)}
-  ${invite}
-  <div class="card">
-    <h2>Pessoas (${S.guests.length})</h2>
-    ${S.guests.map(g => `<div class="list-row"><span><b>${esc(g.name)}</b></span>
-      ${g.id !== S.guestId ? `<button class="smallbtn" data-act="delGuest" data-id="${esc(g.id)}">Remover</button>` : ''}</div>`).join('')}
-  </div>
-  ${winesCard()}
-  <button class="btn green" data-act="closeList" ${S.wines.length < 2 ? 'disabled' : ''}>Já chegaram todos</button>`;
-}
-
-/* --- prep: bottles are being transferred and numbered by hand --- */
-function prepView(me) {
-  const n = S.event.total;
-  if (!S.isHost) {
-    return `${topBar(me)}
-    <div class="stage"><div class="bigicon" aria-hidden="true">🍾</div><h1>A preparar as garrafas</h1></div>
-    <div class="waiting">Já vai começar
-      <span class="small">Notas de 0 a ${maxScore()} · cada nota no máximo ${perScore()} vezes</span></div>`;
-  }
-  return `${topBar(me)}
-  <div class="stage"><div class="bigicon" aria-hidden="true">🍾</div><h1>Preparar as garrafas</h1></div>
-  <div class="card host">
-    <ol class="steps">
-      <li>Passe cada vinho para uma garrafa igual.</li>
-      <li>Tape o nome.</li>
-      <li>Baralhe e numere de 1 a ${n}.</li>
-    </ol>
-    <button class="btn primary" data-act="beginTasting">Começar a prova</button>
-    <button class="textbtn" data-act="backToSetup">Voltar à lista</button>
-  </div>`;
-}
-
-/* --- tasting: free voting, any wine, any order --- */
-function hostTastingPanel() {
-  const miss = missingVotes();
-  return `<div class="card host">
-    <h2>${miss.length ? 'Falta votar' : 'Todos votaram ✓'}</h2>
-    ${miss.map(m => `<div class="list-row"><span><b>${esc(m.g.name)}</b>
-      <span class="sub">${m.miss.length === 1 ? 'vinho ' : 'vinhos '}${listPt(m.miss.map(String))}</span></span>
-      ${m.g.id !== S.guestId ? `<button class="smallbtn" data-act="markLeft" data-id="${esc(m.g.id)}">Já saiu</button>` : ''}</div>`).join('')}
-    <button class="btn primary" data-act="finish">Terminar a prova</button>
-  </div>`;
-}
-
-function guessCard(n) {
-  const g = (S.guesses[S.guestId] || {})[n] || {};
-  const filled = FIELDS.some(f => g[f.k]);
-  if (!S.showGuess) {
-    return `<button class="btn outline" data-act="toggleGuess">${filled ? 'O meu palpite ✓' : 'Adivinhar o vinho'}</button>`;
-  }
-  return `<div class="card">
-    <h2>Palpite · vinho ${n}</h2>
-    <div data-guess-for="${n}">${fieldInputs(FIELDS, 'g_', g, () => 'data-guess')}</div>
-    <button class="btn outline" data-act="toggleGuess">Fechar</button>
-  </div>`;
-}
-
-function tastingView(me) {
-  const e = S.event, total = e.total;
-  if (!S.sel || S.sel > total) S.sel = firstUnscored();
-  const n = S.sel;
-  const mine = myScores();
-  const my = mine[n];
-  const per = perScore();
-  const usedElsewhere = s => Object.keys(mine).filter(k => +k !== n && mine[k] === s).length;
-  const done = Object.keys(mine).filter(k => k <= total && mine[k] != null).length;
-
-  let grid = '';
-  for (let s = 0; s <= maxScore(); s++) {
-    const left = per - usedElsewhere(s);
-    const sel = my === s, out = left <= 0 && !sel;
-    const note = sel ? '✓' : out ? 'esgotado' : (left === 1 ? 'resta 1' : 'restam ' + left);
-    grid += `<button class="score${sel ? ' sel' : ''}" data-act="score" data-s="${s}" ${out ? 'disabled' : ''} aria-pressed="${sel}">
-      <span class="n">${s}</span><span class="left">${note}</span></button>`;
-  }
-
-  let chips = '';
-  for (let k = 1; k <= total; k++) {
-    const v = mine[k];
-    chips += `<button class="chip${v == null ? ' todo' : ''}${k === n ? ' active' : ''}" data-act="go" data-n="${k}">
-      Vinho ${k}<b>${v == null ? '–' : v}</b></button>`;
-  }
-
-  return `${topBar(me)}
-  <div class="label-wrap">
-    <button class="arrow" data-act="go" data-n="${n - 1}" ${n <= 1 ? 'disabled' : ''} aria-label="Vinho anterior">‹</button>
-    <div class="bottle-label"><div class="cap">Vinho</div><div class="num">${n}</div><div class="of">de ${total}</div></div>
-    <button class="arrow" data-act="go" data-n="${n + 1}" ${n >= total ? 'disabled' : ''} aria-label="Vinho seguinte">›</button>
-  </div>
-  ${my == null ? '<p class="prompt">Toque na sua nota</p>' : `<div class="saved">Deu ${my} ao vinho ${n}</div>`}
-  <div class="scores">${grid}</div>
-  ${guessCard(n)}
-  <div class="card">
-    <h2>As suas notas · ${done} de ${total}</h2>
-    <div class="chips">${chips}</div>
-  </div>
-  ${S.isHost ? hostTastingPanel() : ''}`;
-}
-
-/* --- reveal: everyone says which wine was in each bottle; the majority decides --- */
-function revealView(me) {
-  const total = S.event.total;
-  const m = majority();
-  const mine = S.reveals[S.guestId] || {};
-  const voters = k => Object.keys(S.reveals).filter(gid => (S.reveals[gid] || {})[k]).length;
-  const sameName = w => S.wines.some(o => o.id !== w.id && norm(o.name) === norm(w.name));
-  const label = w => esc(w.name) + (sameName(w) ? ' (' + esc(broughtBy(w)) + ')' : '');
-
-  let rows = '';
-  for (let k = 1; k <= total; k++) {
-    const pick = mine[k] || '';
-    const opts = S.wines.map(o => {
-      let at = 0; Object.keys(mine).forEach(b => { if (mine[b] === o.id && +b !== k) at = +b; });
-      return `<option value="${esc(o.id)}"${pick === o.id ? ' selected' : ''}>${label(o)}${at ? ' · garrafa ' + at : ''}</option>`;
-    }).join('');
-    const win = m[k] && S.wines.find(w => w.id === m[k].wid);
-    rows += `<div class="reveal-row"><span class="tag-num">${k}</span><div class="rv">
-      <select data-reveal="${k}" aria-label="Que vinho estava na garrafa ${k}"><option value="">Que vinho é?</option>${opts}</select>
-      <span class="sub">${win ? `<span class="majority">${label(win)}</span> · ${m[k].n} de ${plural(voters(k), 'voto', 'votos')}` : 'Sem votos'}</span>
-    </div></div>`;
-  }
-  const left = bottlesWithoutMajority();
-  return `${topBar(me)}
-  <div class="stage"><div class="bigicon" aria-hidden="true">🎁</div><h1>A revelação</h1>
-    <p class="lead">Que vinho estava em cada garrafa?</p></div>
-  <div class="card">${rows}</div>
-  ${S.isHost ? `<div class="card host">
-      <button class="btn primary" style="margin-top:0" data-act="showResults" ${left.length ? 'disabled' : ''}>Mostrar resultados</button>
-      <button class="textbtn" data-act="backToTasting">Voltar à prova</button></div>`
-    : DEMO ? `<div class="card host">
-        <button class="btn primary" style="margin-top:0" data-act="showResults" ${left.length ? 'disabled' : ''}>Ver resultados</button></div>`
-    : '<div class="waiting">Os resultados vêm já</div>'}`;
-}
-
-/* --- results --- */
-function computeResults() {
-  const rows = S.wines.filter(w => w.number).map(w => {
-    const vals = Object.values(S.ratings).map(sc => sc[w.number]).filter(v => typeof v === 'number');
-    const sum = vals.reduce((a, b) => a + b, 0);
-    return Object.assign({}, w, { count: vals.length, total: sum, avg: vals.length ? sum / vals.length : null,
-      min: vals.length ? Math.min(...vals) : null, max: vals.length ? Math.max(...vals) : null });
-  });
-  rows.sort((a, b) => (b.avg == null ? -1 : b.avg) - (a.avg == null ? -1 : a.avg) || a.number - b.number);
-  rows.forEach(r => { r.rank = r.avg == null ? null : 1 + rows.filter(o => o.avg != null && o.avg > r.avg + 1e-9).length; });
-  return rows;
-}
-
-function guessScore(gid) {
-  let right = 0, tried = 0;
-  const all = S.guesses[gid] || {};
-  S.wines.filter(w => w.number).forEach(w => {
-    const g = all[w.number] || {};
-    FIELDS.forEach(f => { const j = judge(f.k, g[f.k], w); if (j) { tried++; if (j.ok) right++; } });
-  });
-  return { right, tried };
-}
-
-function myGuessLines(w) {
-  const g = (S.guesses[S.guestId] || {})[w.number] || {};
-  const lines = FIELDS.map(f => {
-    const j = judge(f.k, g[f.k], w);
-    if (!j) return '';
-    return `<div class="nrow"><span>${f.label}: ${esc(g[f.k])}</span><span class="${j.ok ? 'ok' : 'bad'}">${j.ok ? '✓' : '✗'}${j.note ? ' ' + j.note : ''}</span></div>`;
-  }).join('');
-  return lines ? `<p class="small" style="margin-top:8px"><b>O seu palpite</b></p>${lines}` : '';
-}
-
-/* Fun numbers for the end of the night. Each entry: icon, title, main line, detail. */
-function nightStats(rows) {
-  const out = [];
-  const numbered = rows.filter(r => r.count);
-  const people = S.guests.map(g => {
-    const sc = S.ratings[g.id] || {}, vals = numbered.map(r => sc[r.number]).filter(v => typeof v === 'number');
-    return { g, sc, vals, avg: vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null };
-  }).filter(p => p.vals.length);
-  const namesOf = list => listPt(list.map(p => esc(p.g.name)));
-
-  if (people.length >= 2) {
-    const hi = Math.max(...people.map(p => p.avg)), lo = Math.min(...people.map(p => p.avg));
-    if (hi - lo > 1e-9) {
-      out.push(['😊', 'Mais generoso', namesOf(people.filter(p => Math.abs(p.avg - hi) < 1e-9)), 'média ' + fmt(hi)]);
-      out.push(['🧐', 'Mais exigente', namesOf(people.filter(p => Math.abs(p.avg - lo) < 1e-9)), 'média ' + fmt(lo)]);
-    }
-    // Two people whose scores differ the least, over the wines both scored
-    let best = null;
-    for (let i = 0; i < people.length; i++) for (let j = i + 1; j < people.length; j++) {
-      const common = numbered.filter(r => typeof people[i].sc[r.number] === 'number' && typeof people[j].sc[r.number] === 'number');
-      if (common.length < 2) continue;
-      const diff = common.reduce((a, r) => a + Math.abs(people[i].sc[r.number] - people[j].sc[r.number]), 0) / common.length;
-      if (!best || diff < best.diff) best = { diff, a: people[i], b: people[j] };
-    }
-    if (best) out.push(['👯', 'Gostos parecidos', esc(best.a.g.name) + ' e ' + esc(best.b.g.name), 'diferença média de ' + fmt(best.diff).replace(/,00$/, '')]);
-  }
-
-  const spread = numbered.filter(r => r.count >= 2);
-  if (spread.length >= 2) {
-    const calm = spread.slice().sort((a, b) => (a.max - a.min) - (b.max - b.min) || b.avg - a.avg)[0];
-    const wild = spread.slice().sort((a, b) => (b.max - b.min) - (a.max - a.min) || b.avg - a.avg)[0];
-    if (calm !== wild && wild.max - wild.min > calm.max - calm.min) {
-      out.push(['🤝', 'Mais consensual', esc(calm.name), calm.min === calm.max ? 'todos deram ' + calm.min : 'notas de ' + calm.min + ' a ' + calm.max]);
-      out.push(['⚡', 'Mais polémico', esc(wild.name), 'notas de ' + wild.min + ' a ' + wild.max]);
-    }
-  }
-
-  const all = people.flatMap(p => p.vals);
-  if (all.length) {
-    const freq = {};
-    all.forEach(v => { freq[v] = (freq[v] || 0) + 1; });
-    const top = Math.max(...Object.values(freq));
-    const common = Object.keys(freq).filter(v => freq[v] === top).map(Number).sort((a, b) => b - a);
-    out.push(['🔢', 'Nota mais dada', listPt(common.map(String)), plural(top, 'vez', 'vezes')]);
-    out.push(['🍷', 'Pontos da noite', String(all.reduce((a, b) => a + b, 0)), plural(all.length, 'nota', 'notas')]);
-  }
-
-  // Blind, but did anyone fall for their own bottle?
-  let self = null;
-  numbered.forEach(r => owners(r).forEach(gid => {
-    const v = (S.ratings[gid] || {})[r.number];
-    if (typeof v === 'number' && (!self || v > self.v)) self = { v, gid, r };
-  }));
-  if (self && self.v >= 7) out.push(['❤️', 'Gostou do próprio vinho', esc(guestName(self.gid)), 'deu ' + self.v + ' ao seu ' + esc(self.r.name)]);
-  return out;
-}
-
-function resultsView(me) {
-  const rows = computeResults();
-  const winners = rows.filter(r => r.rank === 1);
-  const medal = r => ({ 1: '🥇', 2: '🥈', 3: '🥉' }[r.rank] || '');
-  const mine = myScores();
-  const guessers = S.guests.map(g => Object.assign({ g }, guessScore(g.id))).filter(x => x.tried).sort((a, b) => b.right - a.right);
-  const stats = nightStats(rows);
-
-  return `${topBar(me)}
-  <h1 class="center">Resultados</h1>
-  ${winners.length > 1 ? '<p class="center lead">Empate!</p>' : ''}
-  ${winners.map(w => `<div class="winner reveal">
-    <div class="medal" aria-hidden="true">🏆</div>
-    <div class="wname">${esc(w.name)}</div>
-    <div class="soft">de ${esc(broughtBy(w))}</div>
-    <div class="avg">${fmt(w.avg)}</div>
-    <div class="soft">média</div>
-  </div>`).join('')}
-  <div class="card">
-    <h2>Classificação</h2>
-    ${rows.map(r => `<details class="rank"><summary>
-      <div class="rk${medal(r) ? ' medal' : ''}">${medal(r) || (r.rank || '–')}</div>
-      <div class="info"><b>${esc(r.name)}</b>${owns(r, S.guestId) ? '<span class="mine-tag">seu</span>' : ''}
-        <span class="sub">de ${esc(broughtBy(r))} · garrafa ${r.number}</span>
-        <span class="sub">${r.total} pontos · ${plural(r.count, 'nota', 'notas')}${mine[r.number] != null ? ` · a sua: <b>${mine[r.number]}</b>` : ''}</span></div>
-      <div class="av">${fmt(r.avg)}<span class="avl">média</span></div></summary>
-      <div class="more">
-        ${factsLine(r) ? `<div class="facts">${esc(factsLine(r))}</div>` : ''}
-        ${S.guests.map(g => { const v = (S.ratings[g.id] || {})[r.number];
-          return v == null ? '' : `<div class="nrow"><span>${esc(g.name)}</span><b>${v}</b></div>`; }).join('')}
-        ${myGuessLines(r)}
-      </div>
-    </details>`).join('')}
-  </div>
-  ${stats.length ? `<div class="card"><h2>Estatísticas</h2><div class="stats">
-    ${stats.map(([icon, title, main, detail]) => `<div class="stat"><span class="ic" aria-hidden="true">${icon}</span>
-      <span class="st">${title}</span><b>${main}</b><span class="sd">${detail}</span></div>`).join('')}</div></div>` : ''}
-  ${guessers.length ? `<div class="card"><h2>Palpites</h2>
-    ${guessers.map(x => `<div class="nrow"><span>${esc(x.g.name)}</span><b>${x.right} de ${x.tried}</b></div>`).join('')}</div>` : ''}
-  ${S.isHost ? `<button class="textbtn" data-act="reopen">Corrigir a revelação</button>
-    <button class="textbtn" data-act="newTasting">Nova prova</button>`
-    : DEMO ? '<button class="btn outline" data-act="leave">Experimentar outra vez</button>' : ''}`;
-}
-
-function view() {
-  const ribbon = DEMO ? '<div class="ribbon">Demonstração · experimente avaliar os vinhos</div>' : '';
-  return ribbon + screen();
-}
-
-function screen() {
-  if (!fs) return '<p class="center lead" style="margin-top:40vh">Sem ligação. Verifique a internet.</p>';
-  if (!S.code) {
-    if (DEMO) return '<p class="center lead" style="margin-top:40vh">A carregar…</p>';
-    if (S.view === 'join') return joinView();
-    if (S.view === 'create' && S.canCreate) return createView();
-    if (S.view === 'hostLogin' && S.canCreate) return hostLoginView();
-    return homeView();
-  }
-  if (!S.event || !S.guestsLoaded) return '<p class="center lead" style="margin-top:40vh">A carregar…</p>';
-  const me = S.guests.find(g => g.id === S.guestId);
-  if (!me) return '<p class="center lead" style="margin-top:40vh">A carregar…</p>';
-  const ph = S.event.phase;
-  if (ph === 'prep') return prepView(me);
-  if (ph === 'tasting') return tastingView(me);
-  if (ph === 'reveal') return revealView(me);
-  if (ph === 'done') return resultsView(me);
-  return setupView(me);
-}
-
-/* ---------- rendering ---------- */
-// Typed-in fields (marked data-keep) and the "who brought it" choices survive live redraws.
-function captureDraft() {
-  const d = { fields: {} };
-  $app.querySelectorAll('[data-keep]').forEach(el => { if (el.id) d.fields[el.id] = el.value; });
-  const p = document.getElementById('newOwners');
-  if (p) d.owners = Array.from(p.querySelectorAll('.pill.on')).map(b => b.dataset.gid);
-  return d;
-}
-function restoreDraft(d) {
-  Object.keys(d.fields).forEach(id => { const el = document.getElementById(id); if (el && el.hasAttribute('data-keep')) el.value = d.fields[id]; });
-  const p = document.getElementById('newOwners');
-  if (p && d.owners) p.querySelectorAll('.pill').forEach(b => {
-    const on = d.owners.indexOf(b.dataset.gid) >= 0;
-    b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
-  });
-}
-
-function render(force) {
-  const ae = document.activeElement;
-  // Don't wipe what someone is typing; redraw once they leave the box.
-  if (!force && ae && $app.contains(ae) && /^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName)) {
-    if (!S.pending) {
-      S.pending = true;
-      ae.addEventListener('blur', () => setTimeout(() => { if (S.pending) { S.pending = false; render(); } }, 350), { once: true });
-    }
-    return;
-  }
-  S.pending = false;
-  if (force && ae && ae.blur && $app.contains(ae)) ae.blur();
-  const key = S.code ? 'ev:' + S.code + ':' + (S.event ? S.event.phase : '') : 'v:' + S.view;
-  const draft = key === S.lastKey && !S.clearDraft ? captureDraft() : null;
-  S.lastKey = key; S.clearDraft = false;
-  $app.innerHTML = view();
-  if (draft) restoreDraft(draft);
-  const qr = document.getElementById('qr');
-  if (qr && window.QRCode) {
-    new QRCode(qr, { text: location.origin + location.pathname + '?e=' + S.code, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
-  }
-  syncWakeLock();
-}
-
-let busy = false;
-$app.addEventListener('click', e => {
-  const b = e.target.closest('[data-act]');
-  if (!b || b.disabled || busy) return;
-  const fn = A[b.dataset.act];
-  if (!fn) return;
-  busy = true;
-  Promise.resolve().then(() => fn(b.dataset, b)).catch(err => {
-    console.error(err);
-    toast('Não funcionou. Verifique a internet.');
-  }).finally(() => { busy = false; });
-});
-$app.addEventListener('keydown', e => {
-  if (e.key !== 'Enter' || !e.target.dataset || !e.target.dataset.enter) return;
-  e.preventDefault();
-  const btn = $app.querySelector('[data-act="' + e.target.dataset.enter + '"]');
-  if (btn) btn.click();
-});
-$app.addEventListener('change', e => {
-  const t = e.target;
-  const fail = err => { console.error(err); toast('Não foi possível guardar. Verifique a internet.'); };
-  if (t.dataset && t.dataset.reveal) {
-    saveRevealVote(parseInt(t.dataset.reveal, 10), t.value || null).then(() => render(true)).catch(fail);
-  } else if (t.hasAttribute('data-guess')) {
-    const box = t.closest('[data-guess-for]');
-    if (box) saveGuess(parseInt(box.dataset.guessFor, 10)).catch(fail);
-  }
-});
-
-/* ---------- demo: everything lives in this phone's memory, with three virtual guests ---------- */
-function memoryDb(onChange) {
-  const store = new Map(), listeners = new Set();
-  const clone = o => o == null ? null : JSON.parse(JSON.stringify(o));
-  const merge = (a, b) => {
-    const r = Object.assign({}, a);
-    Object.keys(b).forEach(k => { r[k] = b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && r[k] && typeof r[k] === 'object' ? merge(r[k], b[k]) : b[k]; });
-    return r;
-  };
-  const kids = p => Array.from(store.keys()).filter(k => k.indexOf(p + '/') === 0 && k.slice(p.length + 1).indexOf('/') < 0);
-  let queued = false;
-  const changed = () => {
-    if (queued) return; queued = true;
-    setTimeout(() => { queued = false; listeners.forEach(l => l()); if (onChange) onChange(); }, 0);
-  };
-  const apply = o => {
-    if (o.t === 'set') store.set(o.p, o.merge && store.has(o.p) ? merge(store.get(o.p), clone(o.d)) : clone(o.d));
-    else if (o.t === 'update') { if (!store.has(o.p)) throw new Error('not found: ' + o.p); store.set(o.p, Object.assign({}, store.get(o.p), clone(o.d))); }
-    else store.delete(o.p);
-  };
-  const write = ops => { try { ops.forEach(apply); } catch (e) { return Promise.reject(e); } changed(); return Promise.resolve(); };
-  const snap = p => ({ id: p.split('/').pop(), exists: store.has(p), data: () => clone(store.get(p)) });
-  const watch = (read, cb) => {
-    let last;
-    const l = () => { const s = JSON.stringify(read()); if (s !== last) { last = s; cb(); } };
-    listeners.add(l); setTimeout(l, 0);
-    return () => listeners.delete(l);
-  };
-  function doc(p) {
-    return {
-      id: p.split('/').pop(), path: p,
-      collection: n => col(p + '/' + n),
-      get: () => Promise.resolve(snap(p)),
-      set: (d, o) => write([{ t: 'set', p, d, merge: !!(o && o.merge) }]),
-      update: d => write([{ t: 'update', p, d }]),
-      delete: () => write([{ t: 'delete', p }]),
-      onSnapshot: cb => watch(() => store.get(p) || null, () => cb(snap(p)))
-    };
-  }
-  function col(p) {
-    const c = {
-      doc: id => doc(p + '/' + (id || Math.random().toString(36).slice(2, 12))),
-      add: d => { const r = c.doc(); return r.set(d).then(() => r); },
-      get: () => Promise.resolve({ docs: kids(p).map(snap) }),
-      onSnapshot: cb => watch(() => kids(p).map(k => [k, store.get(k)]), () => cb({ docs: kids(p).map(snap) }))
-    };
-    return c;
-  }
-  return {
-    collection: n => col(n),
-    batch() {
-      const ops = [];
-      return {
-        set(r, d, o) { ops.push({ t: 'set', p: r.path, d, merge: !!(o && o.merge) }); },
-        update(r, d) { ops.push({ t: 'update', p: r.path, d }); },
-        delete(r) { ops.push({ t: 'delete', p: r.path }); },
-        commit: () => write(ops)
-      };
-    }
-  };
-}
-
-/* The demo drops the visitor straight into a tasting that is already running, as a guest, next to four
-   virtual people who have already voted. Everything lives in this phone's memory; nothing reaches Firebase. */
-const Demo = {
-  me: 'Convidado', host: 'Manuel', people: ['Ana', 'Rui', 'Teresa'],
-  wines: [
-    { name: 'Douro Reserva', owners: ['Ana'], country: 'Portugal', region: 'Douro', year: '2019', abv: '14', grapes: 'Touriga Nacional, Touriga Franca' },
-    { name: 'Alentejo Tinto', owners: ['Rui'], country: 'Portugal', region: 'Alentejo', year: '2021', abv: '14,5', grapes: 'Aragonez, Trincadeira, Alicante Bouschet' },
-    { name: 'Dão Colheita', owners: ['Teresa'], country: 'Portugal', region: 'Dão', year: '2018', abv: '13,5', grapes: 'Touriga Nacional, Alfrocheiro' },
-    { name: 'Bairrada Baga', owners: ['Manuel'], country: 'Portugal', region: 'Bairrada', year: '2017', abv: '13', grapes: 'Baga' },
-    { name: 'Alvarinho', owners: ['Ana', 'Rui'], country: 'Portugal', region: 'Vinho Verde', year: '2023', abv: '12,5', grapes: 'Alvarinho' }
-  ],
-  ids: {}, bottles: {}, finished: false, revealed: false,
-
-  async start() {
-    fs = memoryDb(() => Demo.tick());
-    Demo.finished = Demo.revealed = false;
-    const ev = fs.collection('events').doc('DEMO');
-    const names = [Demo.host].concat(Demo.people, [Demo.me]), ids = Demo.ids = {};
-    names.forEach(n => { ids[n] = ev.collection('guests').doc().id; });
-    const total = Demo.wines.length;
-    let t = Date.now();
-    await ev.set({ createdAt: t, hostPin: '', hostGuest: ids[Demo.host], phase: 'tasting', current: 0, total, maxScore: MAX_SCORE, perScore: PER_SCORE });
-    for (const n of names) await ev.collection('guests').doc(ids[n]).set({ name: n, joinedAt: t++ });
-    // The bottles were shuffled and numbered by hand; only the virtual people know which is which.
-    const order = shuffle(Demo.wines.map((w, i) => i));
-    Demo.bottles = {};
-    for (let i = 0; i < total; i++) {
-      const w = Demo.wines[i], gids = w.owners.map(o => ids[o]), ref = ev.collection('wines').doc();
-      await ref.set({ name: w.name, country: w.country, region: w.region, year: w.year, abv: w.abv, grapes: w.grapes,
-        guestId: gids[0], guestIds: gids, number: null, createdAt: t++ });
-      Demo.bottles[order.indexOf(i) + 1] = Object.assign({ id: ref.id }, w);
-    }
-    for (const n of [Demo.host].concat(Demo.people)) await ev.collection('ratings').doc(ids[n]).set(Demo.ballot(total));
-    enterEvent('DEMO', ids[Demo.me], null);
-  },
-
-  // Scores (each at most twice) and guesses, some right and some wrong.
-  ballot(total) {
-    const pool = shuffle([3, 4, 5, 6, 7, 8, 9, 10].flatMap(x => [x, x])).concat(shuffle([0, 1, 2, 0, 1, 2]));
-    const pick = (real, list, p) => Math.random() < p ? real : list[Math.floor(Math.random() * list.length)];
-    const scores = {}, guesses = {};
-    for (let k = 1; k <= total; k++) {
-      const w = Demo.bottles[k];
-      scores[k] = pool[k - 1];
-      guesses[k] = {
-        name: '', country: pick(w.country, ['Portugal', 'Espanha', 'França'], 0.8),
-        region: pick(w.region, ['Douro', 'Alentejo', 'Dão', 'Bairrada', 'Lisboa'], 0.4),
-        year: String(parseInt(w.year, 10) + (Math.random() < 0.4 ? 0 : 1)),
-        abv: pick(w.abv, ['12,5', '13', '14'], 0.5), grapes: pick(w.grapes, ['Touriga Nacional', 'Baga', 'Castelão', 'Aragonez'], 0.5)
-      };
-    }
-    return { scores, guesses };
-  },
-
-  // Once the visitor has scored every wine, the virtual host ends the tasting; at the reveal the others vote.
-  tick() {
-    const e = S.event;
-    if (!e) return;
-    if (e.phase === 'tasting' && !Demo.finished) {
-      const mine = myScores();
-      for (let k = 1; k <= e.total; k++) if (mine[k] == null) return;
-      Demo.finished = true;
-      toast('Votou em todos! A prova vai terminar.', 'ok');
-      setTimeout(() => fs.collection('events').doc('DEMO').update({ phase: 'reveal' }), 3500);
-    }
-    if (e.phase === 'reveal' && !Demo.revealed) {
-      Demo.revealed = true;
-      setTimeout(async () => {
-        const voters = [Demo.host].concat(Demo.people);
-        for (let i = 0; i < voters.length; i++) {
-          const map = {};
-          for (let k = 1; k <= e.total; k++) map[k] = Demo.bottles[k].id;
-          if (voters[i] === 'Teresa') { const x = map[1]; map[1] = map[2]; map[2] = x; } // one mix-up; the majority fixes it
-          await fs.collection('events').doc('DEMO').collection('ratings').doc(Demo.ids[voters[i]]).set({ reveal: map }, { merge: true });
-        }
-      }, 1500);
-    }
-  }
-};
-
-/* ---------- start ---------- */
-/* Phones and GitHub keep old copies of this page for a while. version.txt is always fetched fresh; if it names
-   a newer version than this page, reload once with ?v=<version>, an address no cache has seen yet. */
-async function isOutdated() {
-  try {
-    const r = await fetch('version.txt?t=' + Date.now(), { cache: 'no-store' });
-    if (!r.ok) return false;
-    const latest = (await r.text()).trim();
-    if (!latest || latest === APP_VERSION || PARAMS.get('v') === latest) return false;
-    PARAMS.set('v', latest);
-    location.replace(location.pathname + '?' + PARAMS.toString());
-    return true;
-  } catch (e) { return false; }
-}
-
-(async function init() {
-  if (await isOutdated()) return;
-  if (DEMO) { await Demo.start(); return; }
-  if (!window.firebase) { render(true); return; }
-  firebase.initializeApp(firebaseConfig);
-  fs = firebase.firestore();
-  // Some routers, mobile networks and antivirus proxies hold back Firestore's streaming connection,
-  // so live updates never arrive. Long polling works everywhere and is plenty fast for a dinner table.
-  // Each poll is answered within 10 s (default 30 s), so a network that holds replies back delays updates by at most ~10 s.
-  fs.settings({ experimentalForceLongPolling: true, experimentalAutoDetectLongPolling: false, experimentalLongPollingOptions: { timeoutSeconds: 10 }, merge: true });
-
-  // Only the host link (?anfitriao=<secret>) can create tastings. The plain link only joins one with a code.
-  const key = PARAMS.get('anfitriao');
-  try { if (key && await sha256(key) === HOST_HASH) { S.hostKey = key; S.canCreate = true; } } catch (e) {}
-
-  // Reopen this phone's tasting only when the address names it (a reload, or the QR code again).
-  // The plain link always starts on the home screen.
-  const urlCode = (PARAMS.get('e') || '').toUpperCase().replace(/[^A-Z]/g, '');
-  const saved = loadSession();
-  if (urlCode.length === 4 && saved && saved.code === urlCode && saved.guestId) {
-    S.code = saved.code; S.guestId = saved.guestId; S.hostPin = saved.hostPin || null;
-    setUrl(S.code); subscribe(); render(true);
-  } else if (urlCode.length === 4) {
-    S.joinCode = urlCode; S.view = 'join'; setUrl(urlCode); render(true);
-  } else {
-    setUrl(null); render(true);
-  }
-})();
-</script>
+    <div class="container">
+        <div class="logo">
+            <img src="src/android/app/src/main/res/drawable/ic_yuzu.png" alt="Eden Duo Logo">
+        </div>
+        <h1>🎮 Eden Duo - Your Dual-Screen Switch Gaming Companion</h1>
+        
+        <div class="badge-container">
+            <a href="https://discord.gg/r6vBWKAqCK" class="badge" style="background: #5865F2;">💬 Discord Community</a>
+            <a href="https://ko-fi.com/igawa6" class="badge" style="background: #F16061;">☕ Support on Ko-fi</a>
+            <a href="https://ko-fi.com/polls/3rd-Poll-Next-Switch-Game-on-Eden-Duo-C7J128KB48" class="badge" style="background: #1ABC9C;">🗳️ Vote for Next Game</a>
+        </div>
+
+        <a href="https://github.com/johnpaulnarisetty/eden-duo/releases" class="download-btn">⬇️ Download Eden Duo Now</a>
+
+        <p>Welcome to <strong>Eden Duo</strong> – the revolutionary Nintendo Switch emulator specifically designed for Android dual-screen handhelds. If you own a device like the <strong>AYN Thor</strong> or any other Android device with two displays, you're about to experience Switch gaming like never before!</p>
+
+        <div class="highlight">
+            <h2>🎯 What Makes Eden Duo Special?</h2>
+            <p>While other emulators force you to choose one screen, Eden Duo harnesses the power of both displays. Your main screen shows the game, while the second screen displays live companion apps, maps, inventories, or any other supplementary content. It's like having a built-in strategy guide!</p>
+        </div>
+
+        <h2>✨ Key Features</h2>
+        <div class="features">
+            <div class="feature-card">
+                <h3>🖥️ Dual-Screen Support</h3>
+                <p>Play the game on your primary display while running companion apps, walkthroughs, or system tools on your secondary screen. Seamless integration!</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎮 Full Switch Compatibility</h3>
+                <p>Based on the powerful Eden emulator, Eden Duo supports a vast library of Nintendo Switch games with impressive performance and graphics.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📱 Optimized for Android</h3>
+                <p>Specifically engineered for Android dual-screen devices. Enjoy smooth framerates, minimal battery drain, and intuitive touch controls.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔧 Regular Updates</h3>
+                <p>Active development means you'll receive frequent updates with new features, game compatibility fixes, and performance improvements.</p>
+            </div>
+        </div>
+
+        <h2>🚀 Getting Started</h2>
+        <p>Ready to dive in? Here's how to get Eden Duo up and running on your device:</p>
+        <ol style="margin-left: 25px; margin-bottom: 20px;">
+            <li><strong>Visit the download page:</strong> <a href="https://github.com/johnpaulnarisetty/eden-duo/releases" style="color: #667eea; font-weight: bold;">Click here to download the application</a></li>
+            <li><strong>Download the APK file:</strong> Look for the latest release and download the APK file for your Android device.</li>
+            <li><strong>Enable installation from unknown sources:</strong> Go to your device settings, find security options, and allow installation from unknown sources.</li>
+            <li><strong>Install and launch:</strong> Open the downloaded file, install Eden Duo, and launch the app.</li>
+            <li><strong>Load your games:</strong> Add your Switch game ROMs (in .xci or .nsp format) and start playing!</li>
+        </ol>
+
+        <h2>🔧 System Requirements</h2>
+        <p>Eden Duo works best on the following hardware:</p>
+        <ul>
+            <li><strong>Device:</strong> Android smartphone or handheld with dual screens (AYN Thor recommended)</li>
+            <li><strong>Android Version:</strong> 10 or higher</li>
+            <li><strong>RAM:</strong> 4GB minimum, 8GB recommended</li>
+            <li><strong>Storage:</strong> At least 2GB free space for emulator and game data</li>
+            <li><strong>Processor:</strong> Qualcomm Snapdragon 855 or equivalent</li>
+        </ul>
+
+        <div class="highlight">
+            <h2>🎥 Why Choose Dual-Screen Gaming?</h2>
+            <p>The second screen transforms your gaming experience. Imagine playing <em>The Legend of Zelda: Breath of the Wild</em> while having the interactive map open on your second display. Or playing <em>Pokémon</em> games with type charts and move guides always visible. Eden Duo makes this possible!</p>
+        </div>
+
+        <h2>🛠️ Installation Guide</h2>
+        <p>Visit the link to download the application. The installation process is straightforward:</p>
+        <ul>
+            <li>Once downloaded, tap the APK file to begin installation.</li>
+            <li>Follow the on-screen prompts. You may need to grant permissions for storage access.</li>
+            <li>Launch Eden Duo from your app drawer after installation.</li>
+            <li>Browse to your game files and add them to your library.</li>
+            <li>Configure your controls in the settings menu to match your play style.</li>
+        </ul>
+
+        <h2>💬 Community & Support</h2>
+        <p>Join our vibrant community of dual-screen gaming enthusiasts! Get help with troubleshooting, share game recommendations, and stay updated with the latest features:</p>
+        <ul>
+            <li><a href="https://discord.gg/r6vBWKAqCK" style="color: #667eea;">Join our Discord Server</a> – Active community support and chat</li>
+            <li><a href="https://ko-fi.com/igawa6" style="color: #667eea;">Support Development on Ko-fi</a> – Help us keep improving</li>
+            <li><a href="https://ko-fi.com/polls/3rd-Poll-Next-Switch-Game-on-Eden-Duo-C7J128KB48" style="color: #667eea;">Vote for Next Game</a> – Decide which games to optimize next</li>
+        </ul>
+
+        <h2>📚 Frequently Asked Questions</h2>
+        <h3 style="margin-top: 15px; color: #4a5568;">Is Eden Duo free?</h3>
+        <p>Yes! Eden Duo is completely free to download and use. We accept donations through Ko-fi to support ongoing development.</p>
+        
+        <h3 style="margin-top: 15px; color: #4a5568;">Will it work on my device?</h3>
+        <p>Eden Duo is optimized for dual-screen Android devices. If you have a single-screen device, you can still use it, but you won't get the full dual-screen experience.</p>
+        
+        <h3 style="margin-top: 15px; color: #4a5568;">Is this legal?</h3>
+        <p>Emulation itself is legal, but you should only use game ROMs you own or have the legal right to play. Please respect game developers and publishers.</p>
+
+        <div class="footer">
+            <p style="margin-bottom: 5px;">Made with ❤️ by the Eden Duo Team</p>
+            <p>© 2024 Eden Duo. Not affiliated with Nintendo.</p>
+        </div>
+    </div>
 </body>
 </html>
