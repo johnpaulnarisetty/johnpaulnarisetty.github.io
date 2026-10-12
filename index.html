@@ -160,7 +160,14 @@
   .rk { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--claret-soft); color: var(--claret-deep); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; }
   .rk.medal { background: none; font-size: 2rem; }
   .rank .info { flex: 1; min-width: 0; }
-  .rank .av { font-size: 1.4rem; font-weight: 700; color: var(--claret-deep); }
+  .rank .av { font-size: 1.4rem; font-weight: 700; color: var(--claret-deep); text-align: right; line-height: 1.1; }
+  .rank .avl { display: block; font-size: .7rem; font-weight: 400; color: var(--muted); }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat { background: var(--bg); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; min-width: 0; }
+  .stat .ic { font-size: 1.6rem; line-height: 1; }
+  .stat .st { font-size: .8rem; color: var(--muted); margin-top: 6px; }
+  .stat b { font-size: 1.05rem; line-height: 1.2; margin-top: 2px; overflow-wrap: anywhere; color: var(--claret-deep); }
+  .stat .sd { font-size: .8rem; color: var(--muted); margin-top: 2px; }
   .rank .more { padding: 0 4px 14px 56px; }
   .mine-tag { display: inline-block; background: var(--bottle-soft); color: var(--bottle); font-size: .75rem; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-left: 6px; vertical-align: middle; }
   .nrow { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; font-size: 1rem; }
@@ -250,7 +257,7 @@ const MAX_WINES = 20;   // 11 scores x 2 = 22, enough for 20 bottles
 /* Only phones that opened the host link (?anfitriao=...) can create tastings.
    This is the SHA-256 of that secret, so the secret itself is not in the page. */
 /* Bump APP_VERSION and write the same text in version.txt on every change, so phones pick up the new page. */
-const APP_VERSION = '2026-10-12.4';
+const APP_VERSION = '2026-10-12.5';
 
 const HOST_HASH = '49214f3a6d9f8fdf74917bea9434172be1b120fa94d96739f5c2c57320a5e5dd';
 
@@ -1034,7 +1041,8 @@ function computeResults() {
   const rows = S.wines.filter(w => w.number).map(w => {
     const vals = Object.values(S.ratings).map(sc => sc[w.number]).filter(v => typeof v === 'number');
     const sum = vals.reduce((a, b) => a + b, 0);
-    return Object.assign({}, w, { count: vals.length, avg: vals.length ? sum / vals.length : null });
+    return Object.assign({}, w, { count: vals.length, total: sum, avg: vals.length ? sum / vals.length : null,
+      min: vals.length ? Math.min(...vals) : null, max: vals.length ? Math.max(...vals) : null });
   });
   rows.sort((a, b) => (b.avg == null ? -1 : b.avg) - (a.avg == null ? -1 : a.avg) || a.number - b.number);
   rows.forEach(r => { r.rank = r.avg == null ? null : 1 + rows.filter(o => o.avg != null && o.avg > r.avg + 1e-9).length; });
@@ -1061,12 +1069,70 @@ function myGuessLines(w) {
   return lines ? `<p class="small" style="margin-top:8px"><b>O seu palpite</b></p>${lines}` : '';
 }
 
+/* Fun numbers for the end of the night. Each entry: icon, title, main line, detail. */
+function nightStats(rows) {
+  const out = [];
+  const numbered = rows.filter(r => r.count);
+  const people = S.guests.map(g => {
+    const sc = S.ratings[g.id] || {}, vals = numbered.map(r => sc[r.number]).filter(v => typeof v === 'number');
+    return { g, sc, vals, avg: vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null };
+  }).filter(p => p.vals.length);
+  const namesOf = list => listPt(list.map(p => esc(p.g.name)));
+
+  if (people.length >= 2) {
+    const hi = Math.max(...people.map(p => p.avg)), lo = Math.min(...people.map(p => p.avg));
+    if (hi - lo > 1e-9) {
+      out.push(['😊', 'Mais generoso', namesOf(people.filter(p => Math.abs(p.avg - hi) < 1e-9)), 'média ' + fmt(hi)]);
+      out.push(['🧐', 'Mais exigente', namesOf(people.filter(p => Math.abs(p.avg - lo) < 1e-9)), 'média ' + fmt(lo)]);
+    }
+    // Two people whose scores differ the least, over the wines both scored
+    let best = null;
+    for (let i = 0; i < people.length; i++) for (let j = i + 1; j < people.length; j++) {
+      const common = numbered.filter(r => typeof people[i].sc[r.number] === 'number' && typeof people[j].sc[r.number] === 'number');
+      if (common.length < 2) continue;
+      const diff = common.reduce((a, r) => a + Math.abs(people[i].sc[r.number] - people[j].sc[r.number]), 0) / common.length;
+      if (!best || diff < best.diff) best = { diff, a: people[i], b: people[j] };
+    }
+    if (best) out.push(['👯', 'Gostos parecidos', esc(best.a.g.name) + ' e ' + esc(best.b.g.name), 'diferença média de ' + fmt(best.diff).replace(/,00$/, '')]);
+  }
+
+  const spread = numbered.filter(r => r.count >= 2);
+  if (spread.length >= 2) {
+    const calm = spread.slice().sort((a, b) => (a.max - a.min) - (b.max - b.min) || b.avg - a.avg)[0];
+    const wild = spread.slice().sort((a, b) => (b.max - b.min) - (a.max - a.min) || b.avg - a.avg)[0];
+    if (calm !== wild && wild.max - wild.min > calm.max - calm.min) {
+      out.push(['🤝', 'Mais consensual', esc(calm.name), calm.min === calm.max ? 'todos deram ' + calm.min : 'notas de ' + calm.min + ' a ' + calm.max]);
+      out.push(['⚡', 'Mais polémico', esc(wild.name), 'notas de ' + wild.min + ' a ' + wild.max]);
+    }
+  }
+
+  const all = people.flatMap(p => p.vals);
+  if (all.length) {
+    const freq = {};
+    all.forEach(v => { freq[v] = (freq[v] || 0) + 1; });
+    const top = Math.max(...Object.values(freq));
+    const common = Object.keys(freq).filter(v => freq[v] === top).map(Number).sort((a, b) => b - a);
+    out.push(['🔢', 'Nota mais dada', listPt(common.map(String)), plural(top, 'vez', 'vezes')]);
+    out.push(['🍷', 'Pontos da noite', String(all.reduce((a, b) => a + b, 0)), plural(all.length, 'nota', 'notas')]);
+  }
+
+  // Blind, but did anyone fall for their own bottle?
+  let self = null;
+  numbered.forEach(r => owners(r).forEach(gid => {
+    const v = (S.ratings[gid] || {})[r.number];
+    if (typeof v === 'number' && (!self || v > self.v)) self = { v, gid, r };
+  }));
+  if (self && self.v >= 7) out.push(['❤️', 'Gostou do próprio vinho', esc(guestName(self.gid)), 'deu ' + self.v + ' ao seu ' + esc(self.r.name)]);
+  return out;
+}
+
 function resultsView(me) {
   const rows = computeResults();
   const winners = rows.filter(r => r.rank === 1);
   const medal = r => ({ 1: '🥇', 2: '🥈', 3: '🥉' }[r.rank] || '');
   const mine = myScores();
   const guessers = S.guests.map(g => Object.assign({ g }, guessScore(g.id))).filter(x => x.tried).sort((a, b) => b.right - a.right);
+  const stats = nightStats(rows);
 
   return `${topBar(me)}
   <h1 class="center">Resultados</h1>
@@ -1084,8 +1150,8 @@ function resultsView(me) {
       <div class="rk${medal(r) ? ' medal' : ''}">${medal(r) || (r.rank || '–')}</div>
       <div class="info"><b>${esc(r.name)}</b>${owns(r, S.guestId) ? '<span class="mine-tag">seu</span>' : ''}
         <span class="sub">de ${esc(broughtBy(r))} · garrafa ${r.number}</span>
-        ${mine[r.number] != null ? `<span class="sub">A sua nota: <b>${mine[r.number]}</b></span>` : ''}</div>
-      <div class="av">${fmt(r.avg)}</div></summary>
+        <span class="sub">${r.total} pontos · ${plural(r.count, 'nota', 'notas')}${mine[r.number] != null ? ` · a sua: <b>${mine[r.number]}</b>` : ''}</span></div>
+      <div class="av">${fmt(r.avg)}<span class="avl">média</span></div></summary>
       <div class="more">
         ${factsLine(r) ? `<div class="facts">${esc(factsLine(r))}</div>` : ''}
         ${S.guests.map(g => { const v = (S.ratings[g.id] || {})[r.number];
@@ -1094,6 +1160,9 @@ function resultsView(me) {
       </div>
     </details>`).join('')}
   </div>
+  ${stats.length ? `<div class="card"><h2>Estatísticas</h2><div class="stats">
+    ${stats.map(([icon, title, main, detail]) => `<div class="stat"><span class="ic" aria-hidden="true">${icon}</span>
+      <span class="st">${title}</span><b>${main}</b><span class="sd">${detail}</span></div>`).join('')}</div></div>` : ''}
   ${guessers.length ? `<div class="card"><h2>Palpites</h2>
     ${guessers.map(x => `<div class="nrow"><span>${esc(x.g.name)}</span><b>${x.right} de ${x.tried}</b></div>`).join('')}</div>` : ''}
   ${S.isHost ? `<button class="textbtn" data-act="reopen">Corrigir a revelação</button>
