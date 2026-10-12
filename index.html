@@ -8,21 +8,22 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍷</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
 <style>
   :root {
     --claret: #7b1830;
-    --claret-deep: #5c1226;
-    --blush: #f7eef0;
-    --blush-strong: #efdde1;
-    --bottle: #1f4d3a;
-    --bottle-soft: #e3efe8;
-    --ink: #1e1418;
-    --muted: #5f4f54;
-    --line: #e2d3d7;
+    --claret-deep: #561024;
+    --claret-soft: #f6e8ec;
+    --gold: #f1d48b;
+    --bottle: #1f5a40;
+    --bottle-soft: #e3f1e9;
+    --ink: #23161b;
+    --muted: #6b5a60;
+    --line: #ecdfe3;
     --paper: #ffffff;
+    --bg: #f8f1f2;
     --alert: #a3202b;
-    --alert-soft: #fbe6e7;
+    --shadow: 0 1px 2px rgba(60, 20, 35, .06), 0 8px 24px rgba(60, 20, 35, .07);
     box-sizing: border-box;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -30,115 +31,121 @@
   *, *::before, *::after { box-sizing: inherit; }
   html { font-size: 20px; -webkit-text-size-adjust: 100%; }
   body {
-    margin: 0; background: var(--blush); color: var(--ink);
+    margin: 0; color: var(--ink); min-height: 100vh;
+    background: linear-gradient(180deg, #f1dfe4 0, var(--bg) 340px) no-repeat, var(--bg);
     font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     line-height: 1.45;
   }
-  #app { max-width: 560px; margin: 0 auto; padding: 14px 16px 64px; }
-  h1 { font-size: 1.8rem; line-height: 1.15; margin: .5em 0 .35em; color: var(--claret-deep); }
-  h2 { font-size: 1.2rem; line-height: 1.25; margin: 0 0 .5em; }
+  #app { max-width: 540px; margin: 0 auto; padding: 14px 16px 64px; }
+  h1, .display { font-family: "Fraunces", Georgia, "Times New Roman", serif; font-weight: 700; letter-spacing: -.01em; }
+  h1 { font-size: 1.9rem; line-height: 1.12; margin: .45em 0 .35em; color: var(--claret-deep); }
+  h2 { font-size: 1.15rem; line-height: 1.25; margin: 0 0 .6em; }
   p { margin: .4em 0; }
   .center { text-align: center; }
   .lead { font-size: 1.1rem; color: var(--muted); }
   .small { font-size: .85rem; color: var(--muted); }
 
-  .card { background: var(--paper); border-radius: 20px; padding: 18px; margin: 14px 0; border: 1px solid var(--line); }
-  .card.host { border: 3px solid var(--bottle); }
-  .ribbon { background: #fff6e0; border: 2px solid #c99a2e; color: #6b4e0e; border-radius: 12px; padding: 6px 12px; text-align: center; font-weight: 700; font-size: .85rem; margin-bottom: 10px; }
+  .card { background: var(--paper); border-radius: 22px; padding: 20px 18px; margin: 14px 0; box-shadow: var(--shadow); }
+  .ribbon { background: #fbf2de; color: #6b4e0e; border-radius: 14px; padding: 8px 12px; text-align: center; font-weight: 700; font-size: .85rem; margin-bottom: 12px; }
 
   label, .label { display: block; font-weight: 700; margin: 16px 0 6px; }
   input, select {
     width: 100%; font: inherit; font-size: 1.1rem; padding: 14px; color: var(--ink);
-    border: 2px solid #cdb9be; border-radius: 12px; background: #fff;
+    border: 2px solid #e4d4d9; border-radius: 14px; background: #fff;
   }
-  input:focus, select:focus { outline: none; border-color: var(--claret); box-shadow: 0 0 0 4px var(--blush-strong); }
+  input::placeholder { color: #b7a6ab; }
+  input:focus, select:focus { outline: none; border-color: var(--claret); box-shadow: 0 0 0 4px var(--claret-soft); }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
   button { font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   button:focus-visible { outline: 3px solid var(--claret); outline-offset: 3px; }
 
-  .btn { display: block; width: 100%; min-height: 62px; margin-top: 16px; padding: 14px 18px; border-radius: 14px; border: 2px solid transparent; font-size: 1.1rem; font-weight: 700; }
-  .btn.primary { background: var(--claret); color: #fff; }
-  .btn.green { background: var(--bottle); color: #fff; }
+  .btn { display: block; width: 100%; min-height: 62px; margin-top: 16px; padding: 14px 18px; border-radius: 16px; border: 2px solid transparent; font-size: 1.1rem; font-weight: 700; transition: transform .08s ease; }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary, .btn.green { background: linear-gradient(180deg, #8c1e3a, var(--claret)); color: #fff; box-shadow: 0 6px 16px rgba(123, 24, 48, .28); }
   .btn.outline { background: #fff; color: var(--claret); border-color: var(--claret); }
-  .btn:disabled { opacity: .4; cursor: default; }
-  .textbtn { display: block; margin: 12px auto 0; background: none; border: none; color: var(--claret); text-decoration: underline; font-size: .95rem; padding: 10px; min-height: 44px; }
-  .smallbtn { background: #fff; border: 2px solid var(--line); border-radius: 10px; padding: 8px 12px; color: var(--muted); font-size: .85rem; min-height: 44px; flex: none; }
+  .btn:disabled { opacity: .35; box-shadow: none; cursor: default; }
+  .textbtn { display: block; margin: 14px auto 0; background: none; border: none; color: var(--claret); text-decoration: underline; text-underline-offset: 3px; font-size: .95rem; padding: 10px; min-height: 44px; }
+  .smallbtn { background: var(--claret-soft); border: none; border-radius: 12px; padding: 8px 14px; color: var(--claret-deep); font-weight: 700; font-size: .85rem; min-height: 44px; flex: none; }
 
-  .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); font-size: .9rem; }
-  .top b { color: var(--claret); letter-spacing: .08em; }
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); font-size: .95rem; }
+  .top .code { display: inline-block; background: var(--paper); color: var(--claret); font-weight: 700; letter-spacing: .14em; padding: 5px 10px 5px 12px; border-radius: 99px; margin-right: 6px; box-shadow: var(--shadow); }
 
-  .brand { text-align: center; padding: 28px 0 4px; }
-  .brand .glass, .stage .bigicon { font-size: 3.4rem; line-height: 1; }
-  .stage { text-align: center; padding: 18px 0 0; }
+  .brand { text-align: center; padding: 36px 0 8px; }
+  .logo { width: 84px; height: 84px; display: block; margin: 0 auto 6px; filter: drop-shadow(0 8px 16px rgba(86, 16, 36, .25)); }
+  .brand h1 { font-size: 2.2rem; margin: .35em 0 .1em; }
+  .stage { text-align: center; padding: 22px 0 0; }
+  .stage .bigicon { font-size: 3.4rem; line-height: 1; }
 
   .list-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
   .list-row:last-child { border-bottom: none; }
   .sub { display: block; color: var(--muted); font-size: .9rem; }
-  .empty { color: var(--muted); font-style: italic; }
+  .empty { color: var(--muted); }
 
   .wine-item { padding: 12px 0; border-bottom: 1px solid var(--line); }
-  .wine-item .acts { display: flex; gap: 8px; margin-top: 6px; }
-  .share-box { background: var(--blush); border-radius: 14px; padding: 12px; margin-top: 10px; }
-  .add-form { margin-top: 8px; }
+  .wine-item .acts { display: flex; gap: 8px; margin-top: 8px; }
+  .share-box { background: var(--bg); border-radius: 16px; padding: 12px; margin-top: 10px; }
+  .add-form { margin-top: 6px; }
 
   .pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
-  .pill { min-height: 52px; padding: 10px 18px; border-radius: 99px; border: 2px solid #cdb9be; background: #fff; color: var(--ink); font-size: 1rem; font-weight: 700; }
+  .pill { min-height: 52px; padding: 10px 18px; border-radius: 99px; border: 2px solid #e4d4d9; background: #fff; color: var(--ink); font-size: 1rem; font-weight: 700; }
   .pill.on { background: var(--claret); border-color: var(--claret); color: #fff; }
   .pill.on::before { content: "✓ "; }
 
-  .steps { padding-left: 1.4em; margin: .6em 0; }
-  .steps li { margin: .5em 0; }
+  .steps { padding-left: 1.3em; margin: .2em 0 .4em; font-size: 1.05rem; }
+  .steps li { margin: .55em 0; padding-left: .2em; }
+  .steps li::marker { color: var(--claret); font-weight: 700; }
 
-  .waiting { text-align: center; padding: 20px; border-radius: 16px; background: var(--blush-strong); color: var(--claret-deep); font-weight: 700; font-size: 1.1rem; margin: 14px 0; }
-  .waiting .small { font-weight: 400; }
+  .waiting { text-align: center; padding: 22px 18px; border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); color: var(--claret-deep); font-weight: 700; font-size: 1.15rem; margin: 14px 0; }
+  .waiting .small { display: block; font-weight: 400; margin-top: 6px; }
 
-  #qr { display: flex; justify-content: center; padding: 8px; background: #fff; }
+  .invite h2 { margin-bottom: 10px; }
+  #qr { display: flex; justify-content: center; padding: 6px; }
   #qr img, #qr canvas { max-width: 100%; height: auto; }
-  .bigcode { display: block; text-align: center; font-size: 2.4rem; font-weight: 700; letter-spacing: .25em; color: var(--claret); margin: 4px 0; }
+  .bigcode { display: block; text-align: center; font-size: 2.6rem; font-weight: 700; letter-spacing: .28em; color: var(--claret); margin: 6px 0 2px; }
 
   /* The bottle label with arrows: the one bold element */
-  .label-wrap { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 14px 0 10px; }
-  .arrow { flex: none; width: 56px; height: 72px; border-radius: 14px; border: 2px solid var(--claret); background: #fff; color: var(--claret); font-size: 1.8rem; font-weight: 700; }
-  .arrow:disabled { opacity: .25; cursor: default; }
+  .label-wrap { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 16px 0 10px; }
+  .arrow { flex: none; width: 56px; height: 72px; border-radius: 16px; border: none; background: var(--paper); box-shadow: var(--shadow); color: var(--claret); font-size: 2rem; font-weight: 700; }
+  .arrow:disabled { opacity: .3; box-shadow: none; cursor: default; }
   .bottle-label {
-    width: min(220px, 52vw); padding: 14px 10px 12px; text-align: center; background: #fff;
+    width: min(210px, 50vw); padding: 14px 10px 12px; text-align: center; background: #fff;
     border: 3px solid var(--claret); border-radius: 50% / 38%;
-    box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 8px var(--claret);
+    box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 8px var(--claret), 0 10px 24px rgba(86, 16, 36, .12);
   }
   .bottle-label .cap { font-size: .9rem; color: var(--muted); }
-  .bottle-label .num { font-size: 4rem; font-weight: 700; line-height: 1; color: var(--claret-deep); }
+  .bottle-label .num { font-family: "Fraunces", Georgia, serif; font-size: 4.2rem; font-weight: 700; line-height: 1; color: var(--claret-deep); }
   .bottle-label .of { font-size: .9rem; color: var(--muted); }
 
-  .prompt { text-align: center; font-size: 1.15rem; font-weight: 700; margin: 8px 0; }
-  .saved { text-align: center; padding: 10px; border-radius: 12px; background: var(--bottle-soft); color: var(--bottle); font-weight: 700; margin: 8px 0; }
+  .prompt { text-align: center; font-size: 1.15rem; font-weight: 700; margin: 8px 0; color: var(--claret-deep); }
+  .saved { text-align: center; padding: 10px; border-radius: 14px; background: var(--bottle-soft); color: var(--bottle); font-weight: 700; margin: 8px 0; }
   .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
   .score {
-    min-height: 80px; border-radius: 16px; border: 2px solid #cdb9be; background: #fff; color: var(--ink);
+    min-height: 80px; border-radius: 18px; border: 2px solid transparent; background: #fff; color: var(--ink); box-shadow: var(--shadow);
     display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px;
   }
   .score .n { font-size: 2.1rem; font-weight: 700; line-height: 1; }
   .score .left { font-size: .8rem; color: var(--muted); margin-top: 5px; }
-  .score.sel { background: var(--claret); border-color: var(--claret); color: #fff; }
+  .score.sel { background: linear-gradient(180deg, #8c1e3a, var(--claret)); color: #fff; box-shadow: 0 6px 16px rgba(123, 24, 48, .3); }
   .score.sel .left { color: #fff; }
-  .score:disabled { background: #efe9ea; color: #ad9fa3; border-style: dashed; cursor: default; }
-  .score:disabled .left { color: #ad9fa3; }
+  .score:disabled { background: transparent; color: #c2b3b8; border: 2px dashed #e4d4d9; box-shadow: none; cursor: default; }
+  .score:disabled .left { color: #c2b3b8; }
 
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { min-width: 62px; padding: 8px 10px; border-radius: 12px; border: 2px solid var(--line); background: #fff; display: flex; flex-direction: column; align-items: center; font-size: .8rem; color: var(--muted); }
+  .chip { min-width: 60px; padding: 8px 10px; border-radius: 14px; border: 2px solid var(--line); background: #fff; display: flex; flex-direction: column; align-items: center; font-size: .8rem; color: var(--muted); }
   .chip b { font-size: 1.3rem; color: var(--ink); }
   .chip.todo { border-style: dashed; }
   .chip.active { border-color: var(--claret); box-shadow: 0 0 0 2px var(--claret); }
 
-  .tag-num { flex: none; width: 52px; height: 52px; border-radius: 50%; border: 3px solid var(--claret); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.4rem; color: var(--claret-deep); background: #fff; }
+  .tag-num { flex: none; width: 52px; height: 52px; border-radius: 50%; border: 3px solid var(--claret); display: flex; align-items: center; justify-content: center; font-family: "Fraunces", Georgia, serif; font-weight: 700; font-size: 1.4rem; color: var(--claret-deep); background: #fff; }
   .reveal-row { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; }
   .reveal-row .rv { flex: 1; min-width: 0; }
   .reveal-row .sub { margin: 4px 0 0 4px; }
   .majority { color: var(--bottle); font-weight: 700; }
 
-  .winner { text-align: center; background: var(--claret-deep); color: #fff; border-radius: 24px; padding: 24px 18px; margin: 14px 0; }
+  .winner { text-align: center; background: linear-gradient(160deg, #8c1e3a 0%, #4a0d1f 100%); color: #fff; border-radius: 26px; padding: 26px 18px 24px; margin: 14px 0; box-shadow: 0 14px 32px rgba(74, 13, 31, .35); }
   .winner .medal { font-size: 3.2rem; line-height: 1; }
-  .winner .wname { font-size: 1.8rem; font-weight: 700; line-height: 1.15; margin: 10px 0 4px; }
-  .winner .avg { font-size: 2.8rem; font-weight: 700; margin-top: 10px; line-height: 1; }
+  .winner .wname { font-family: "Fraunces", Georgia, serif; font-size: 1.9rem; font-weight: 700; line-height: 1.15; margin: 12px 0 4px; }
+  .winner .avg { font-size: 3rem; font-weight: 700; margin-top: 12px; line-height: 1; color: var(--gold); }
   .winner .soft { opacity: .85; font-size: .9rem; }
   .reveal { animation: pop .7s ease-out both; }
   @keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -148,31 +155,33 @@
   details.rank:last-child { border-bottom: none; }
   details.rank summary { display: flex; align-items: center; gap: 12px; padding: 12px 0; cursor: pointer; list-style: none; }
   details.rank summary::-webkit-details-marker { display: none; }
-  .rk { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--blush-strong); color: var(--claret-deep); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; }
+  details.rank summary::after { content: "›"; color: var(--muted); font-size: 1.5rem; line-height: 1; transition: transform .2s ease; }
+  details.rank[open] summary::after { transform: rotate(90deg); }
+  .rk { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--claret-soft); color: var(--claret-deep); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; }
   .rk.medal { background: none; font-size: 2rem; }
   .rank .info { flex: 1; min-width: 0; }
   .rank .av { font-size: 1.4rem; font-weight: 700; color: var(--claret-deep); }
   .rank .more { padding: 0 4px 14px 56px; }
-  .mine-tag { display: inline-block; background: var(--bottle-soft); color: var(--bottle); font-size: .75rem; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-left: 4px; vertical-align: middle; }
+  .mine-tag { display: inline-block; background: var(--bottle-soft); color: var(--bottle); font-size: .75rem; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-left: 6px; vertical-align: middle; }
   .nrow { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; font-size: 1rem; }
   .nrow b { color: var(--claret-deep); }
-  .facts { background: var(--blush); border-radius: 10px; padding: 8px 10px; margin: 4px 0 8px; font-size: .9rem; }
+  .facts { background: var(--bg); border-radius: 12px; padding: 8px 10px; margin: 4px 0 8px; font-size: .9rem; }
   .ok { color: var(--bottle); font-weight: 700; }
   .bad { color: var(--alert); }
 
   #toast {
     position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 140%);
-    width: min(520px, calc(100% - 28px)); padding: 16px 18px; border-radius: 14px; font-weight: 700; font-size: 1.05rem;
-    background: var(--alert); color: #fff; box-shadow: 0 8px 28px rgba(40, 10, 20, .3); transition: transform .25s ease; z-index: 10; text-align: center;
+    width: min(520px, calc(100% - 28px)); padding: 16px 18px; border-radius: 16px; font-weight: 700; font-size: 1.05rem;
+    background: var(--alert); color: #fff; box-shadow: 0 10px 30px rgba(40, 10, 20, .3); transition: transform .25s ease; z-index: 10; text-align: center;
   }
   #toast.ok { background: var(--bottle); }
   #toast.show { transform: translate(-50%, 0); }
   #toast:not(.show) { visibility: hidden; transition: transform .25s ease, visibility 0s .25s; }
 
   /* In-app dialog (replaces the browser's "site says..." boxes) */
-  #modal { position: fixed; inset: 0; background: rgba(30, 10, 18, .55); display: flex; align-items: flex-end; justify-content: center; z-index: 20; padding: 16px; }
+  #modal { position: fixed; inset: 0; background: rgba(40, 12, 22, .5); display: flex; align-items: flex-end; justify-content: center; z-index: 20; padding: 16px; }
   #modal[hidden] { display: none; }
-  #modal .sheet { background: #fff; border-radius: 22px; padding: 22px 18px 18px; width: min(520px, 100%); max-height: 85vh; overflow: auto; font-size: 1.1rem; }
+  #modal .sheet { background: #fff; border-radius: 26px; padding: 24px 18px 18px; width: min(520px, 100%); max-height: 85vh; overflow: auto; font-size: 1.15rem; box-shadow: 0 20px 50px rgba(40, 12, 22, .3); }
   #modal .sheet ul { padding-left: 1.2em; margin: .5em 0; }
   #modal .btns { display: flex; gap: 12px; }
   #modal .btns .btn { flex: 1; }
@@ -241,7 +250,7 @@ const MAX_WINES = 20;   // 11 scores x 2 = 22, enough for 20 bottles
 /* Only phones that opened the host link (?anfitriao=...) can create tastings.
    This is the SHA-256 of that secret, so the secret itself is not in the page. */
 /* Bump APP_VERSION and write the same text in version.txt on every change, so phones pick up the new page. */
-const APP_VERSION = '2026-10-12.3';
+const APP_VERSION = '2026-10-12.4';
 
 const HOST_HASH = '49214f3a6d9f8fdf74917bea9434172be1b120fa94d96739f5c2c57320a5e5dd';
 
@@ -380,16 +389,27 @@ async function syncWakeLock() {
 }
 document.addEventListener('visibilitychange', syncWakeLock);
 
-/* A phone whose screen went off may come back with a dead connection, and Firestore can wait half a minute
-   before retrying. When the screen comes back, reconnect at once. */
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState !== 'visible' || DEMO || !fs || !fs.disableNetwork) return;
+/* Firestore sometimes loses its connection and then waits half a minute before trying again, so the phone
+   misses live changes. If this phone's data has not been confirmed by the server for a few seconds, or the
+   screen has just come back on, reconnect at once. Reconnecting costs no extra reads. */
+let staleTimer = null, outOfSync = false;
+function reconnect() {
+  clearTimeout(staleTimer); staleTimer = null;
+  if (DEMO || !fs || !fs.disableNetwork) return;
   fs.disableNetwork().then(() => fs.enableNetwork()).catch(() => {});
-});
+  staleTimer = setTimeout(() => { staleTimer = null; if (outOfSync) reconnect(); }, 8000);
+}
+function watchSync(snap) {
+  outOfSync = snap.metadata.fromCache;
+  if (!outOfSync) { clearTimeout(staleTimer); staleTimer = null; }
+  else if (!staleTimer) staleTimer = setTimeout(reconnect, 4000);
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.code) reconnect(); });
 
 /* ---------- live data ---------- */
 function stopEvent() {
   S.unsub.forEach(u => { try { u(); } catch (e) {} });
+  clearTimeout(staleTimer); staleTimer = null; outOfSync = false;
   Object.assign(S, { unsub: [], code: null, guestId: null, hostPin: null, isHost: false, event: null, guests: [], wines: [], ratings: {}, guesses: {}, reveals: {}, guestsLoaded: false, sel: null, showGuess: false, showMore: false, shareEdit: null });
   clearSession();
   syncWakeLock();
@@ -397,9 +417,16 @@ function stopEvent() {
 
 function subscribe() {
   const ev = evRef();
-  const onErr = err => { console.error(err); toast('Problema de ligação. Verifique a internet e recarregue a página.'); };
+  const onErr = err => { console.error(err); toast('Sem ligação. Verifique a internet.'); };
+  if (!DEMO) {
+    S.unsub.push(ev.onSnapshot({ includeMetadataChanges: true }, watchSync, () => {}));
+    // The first poll opened while the listeners start up can get stuck for ~30 s without the SDK noticing.
+    // Reconnecting once, after start-up settles, replaces it with a healthy one.
+    const t = setTimeout(reconnect, 3000);
+    S.unsub.push(() => clearTimeout(t));
+  }
   S.unsub.push(ev.onSnapshot(snap => {
-    if (!snap.exists) { stopEvent(); setUrl(null); S.view = 'home'; toast('Esta prova já não existe.'); render(true); return; }
+    if (!snap.exists) { stopEvent(); setUrl(null); S.view = 'home'; toast('Esta prova já terminou.'); render(true); return; }
     const prev = S.event;
     S.event = snap.data();
     S.isHost = !!(S.hostPin && S.event.hostPin === S.hostPin);
@@ -419,7 +446,7 @@ function subscribe() {
     S.guestsLoaded = true;
     if (S.guestId && !S.guests.some(g => g.id === S.guestId)) {
       const code = S.code; stopEvent(); S.joinCode = code; S.view = 'join'; setUrl(code);
-      toast('Escreva o seu nome para voltar a entrar.'); render(true); return;
+      toast('Escreva o seu nome para entrar.'); render(true); return;
     }
     render();
   }, onErr));
@@ -539,7 +566,7 @@ const A = {
       const s = await fs.collection('events').doc(c).get();
       if (!s.exists) { code = c; break; }
     }
-    if (!code) return toast('Não foi possível criar a prova. Tente novamente.');
+    if (!code) return toast('Não funcionou. Tente outra vez.');
     const r = await newEvent(code, name);
     enterEvent(code, r.gid, r.pin);
   },
@@ -568,13 +595,13 @@ const A = {
     if (!name) return toast('Escreva o nome do vinho.');
     const picked = Array.from(document.querySelectorAll('#newOwners .pill.on')).map(b => b.dataset.gid);
     const ids = S.isHost ? picked : [S.guestId].concat(picked.filter(g => g !== S.guestId));
-    if (!ids.length) return toast('Toque no nome de quem trouxe esta garrafa.');
+    if (!ids.length) return toast('Escolha de quem é a garrafa.');
     const wine = { guestId: ids[0], guestIds: ids, name, number: null, createdAt: Date.now() };
     DETAIL_FIELDS.forEach(f => { wine[f.k] = val('w_' + f.k); });
     wine.year = wine.year.replace(/\D/g, '').slice(0, 4);
     await evRef().collection('wines').add(wine);
     S.clearDraft = true; S.showMore = false; render(true);
-    toast(ids.length === 1 && ids[0] === S.guestId ? 'Garrafa registada.' : 'Garrafa de ' + listPt(ids.map(guestName)) + ' registada.', 'ok');
+    toast('Garrafa registada.', 'ok');
   },
 
   async delWine(d) {
@@ -591,7 +618,7 @@ const A = {
     if (!w) return;
     let ids = owners(w).slice();
     if (ids.indexOf(d.gid) >= 0) {
-      if (ids.length === 1) return toast('A garrafa tem de ficar com pelo menos uma pessoa.');
+      if (ids.length === 1) return toast('Escolha pelo menos uma pessoa.');
       ids = ids.filter(x => x !== d.gid);
     } else ids.push(d.gid);
     if (!S.isHost && ids.indexOf(S.guestId) < 0) S.shareEdit = null;
@@ -599,7 +626,7 @@ const A = {
   },
 
   async delGuest(d) {
-    if (!await ask('Remover <b>' + esc(guestName(d.id)) + '</b> da prova?<br><br>As garrafas que só esta pessoa trouxe também saem da lista.', 'Remover')) return;
+    if (!await ask('Remover <b>' + esc(guestName(d.id)) + '</b>?', 'Remover')) return;
     const b = fs.batch();
     b.delete(evRef().collection('guests').doc(d.id));
     b.delete(evRef().collection('ratings').doc(d.id));
@@ -613,14 +640,14 @@ const A = {
 
   // During the tasting someone who went home can be taken out of the "still missing" list.
   async markLeft(d) {
-    if (!await ask('<b>' + esc(guestName(d.id)) + '</b> já saiu?<br><br>Deixa de ser preciso esperar pelas notas desta pessoa. As notas que já deu continuam a contar.', 'Sim, já saiu')) return;
+    if (!await ask('<b>' + esc(guestName(d.id)) + '</b> já saiu?', 'Já saiu')) return;
     await evRef().collection('guests').doc(d.id).update({ left: true });
   },
 
   async closeList() {
     const n = S.wines.length;
     if (n < 2) return toast('São precisas pelo menos 2 garrafas.');
-    if (!await ask('Fechar a lista com <b>' + n + ' garrafas</b>?<br><br>Depois já não se podem registar garrafas.', 'Fechar a lista')) return;
+    if (!await ask('Fechar a lista com <b>' + n + ' garrafas</b>?', 'Fechar')) return;
     const b = fs.batch();
     S.wines.forEach(w => b.update(wineRef(w.id), { number: null }));
     b.update(evRef(), { phase: 'prep', current: 0, total: n, maxScore: MAX_SCORE, perScore: PER_SCORE });
@@ -628,12 +655,12 @@ const A = {
   },
 
   async backToSetup() {
-    if (!await ask('Voltar à lista de garrafas, para acrescentar ou corrigir?', 'Voltar')) return;
+    if (!await ask('Voltar à lista de garrafas?', 'Voltar')) return;
     await evRef().update({ phase: 'setup' });
   },
 
   async beginTasting() {
-    if (!await ask('As <b>' + S.event.total + ' garrafas</b> estão numeradas?<br><br>Todos passam a poder votar.', 'Começar')) return;
+    if (!await ask('Começar a prova?', 'Começar')) return;
     await evRef().update({ phase: 'tasting', startedAt: Date.now() });
   },
 
@@ -655,7 +682,7 @@ const A = {
     // Not awaited: Firestore keeps the score on the phone and sends it in the background,
     // so a slow connection never blocks the next tap.
     myRatingRef().set({ scores: { [n]: s } }, { merge: true })
-      .catch(err => { console.error(err); toast('A nota não foi guardada. Verifique a internet e toque outra vez.'); });
+      .catch(err => { console.error(err); toast('Nota não guardada. Toque outra vez.'); });
     const me = S.guests.find(g => g.id === S.guestId);
     if (me && me.left) evRef().collection('guests').doc(S.guestId).update({ left: false }).catch(() => {});
   },
@@ -663,18 +690,17 @@ const A = {
   async finish() {
     const miss = missingVotes();
     if (miss.length) {
-      return tell('<b>Ainda não votaram todos:</b><ul>' + miss.map(m =>
-        `<li>${esc(m.g.name)}: ${m.miss.length === 1 ? 'vinho ' : 'vinhos '}${listPt(m.miss.map(String))}</li>`).join('') +
-        '</ul>A prova só termina quando todos votarem em todos os vinhos.');
+      return tell('<b>Falta votar:</b><ul>' + miss.map(m =>
+        `<li>${esc(m.g.name)}: ${m.miss.length === 1 ? 'vinho ' : 'vinhos '}${listPt(m.miss.map(String))}</li>`).join('') + '</ul>');
     }
-    if (!await ask('Todos votaram em todos os vinhos.<br><br>Terminar a prova e passar à revelação?', 'Terminar')) return;
+    if (!await ask('Terminar a prova?', 'Terminar')) return;
     await evRef().update({ phase: 'reveal' });
   },
 
   async showResults() {
     const left = bottlesWithoutMajority();
-    if (left.length) return tell('Ainda ninguém disse que vinho estava na garrafa ' + listPt(left.map(String)) + '.');
-    if (!await ask('Mostrar os resultados a todos?', 'Mostrar')) return;
+    if (left.length) return tell('Falta escolher o vinho da garrafa ' + listPt(left.map(String)) + '.');
+    if (!await ask('Mostrar os resultados?', 'Mostrar')) return;
     const m = majority();
     const b = fs.batch();
     S.wines.forEach(w => {
@@ -687,23 +713,23 @@ const A = {
   },
 
   async backToTasting() {
-    if (!await ask('Voltar à prova? Todos poderão mudar as notas outra vez.', 'Voltar')) return;
+    if (!await ask('Voltar à prova?', 'Voltar')) return;
     await evRef().update({ phase: 'tasting' });
   },
 
   async reopen() {
-    if (!await ask('Esconder os resultados e voltar à revelação das garrafas?', 'Voltar')) return;
+    if (!await ask('Voltar à revelação?', 'Voltar')) return;
     await evRef().update({ phase: 'reveal' });
   },
 
   async leave() {
-    if (DEMO) { if (await ask('Recomeçar a demonstração do início?', 'Recomeçar')) location.reload(); return; }
-    if (!await ask('Sair desta prova?<br><br>Pode voltar a entrar com o mesmo código e o mesmo nome.', 'Sair')) return;
+    if (DEMO) { if (await ask('Recomeçar a demonstração?', 'Recomeçar')) location.reload(); return; }
+    if (!await ask('Sair da prova?', 'Sair')) return;
     stopEvent(); setUrl(null); S.view = 'home'; render(true);
   },
 
   async newTasting() {
-    if (!await ask('Criar uma prova nova? Vai sair deste ecrã.', 'Criar')) return;
+    if (!await ask('Criar uma nova prova?', 'Criar')) return;
     stopEvent(); setUrl(null); S.view = 'create'; render(true);
   }
 };
@@ -728,13 +754,20 @@ async function saveRevealVote(k, wineId) {
 }
 
 /* ---------- screens ---------- */
+const LOGO = `<svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+  <circle cx="32" cy="32" r="32" fill="#7b1830"/>
+  <path d="M21 13h22c0 13-3.6 21.5-11 22.4C24.6 34.5 21 26 21 13z" fill="#fff"/>
+  <path d="M22.4 22h19.2c-1 7.4-4.1 12.4-9.6 13-5.5-.6-8.6-5.6-9.6-13z" fill="#c2405f"/>
+  <rect x="30.8" y="35" width="2.4" height="11" rx="1" fill="#fff"/>
+  <rect x="24" y="45.5" width="16" height="3" rx="1.5" fill="#fff"/></svg>`;
+
 function homeView() {
-  const brand = '<div class="brand"><div class="glass" aria-hidden="true">🍷</div><h1>Prova Cega de Vinhos</h1></div>';
+  const brand = `<div class="brand">${LOGO}<h1>Prova Cega de Vinhos</h1></div>`;
   // Host link: the host only creates tastings (or gets back to one); guests use the plain link with a code.
   if (S.canCreate) {
     return `${brand}
-    <button class="btn green" data-act="goCreate">Criar uma prova</button>
-    <button class="textbtn" data-act="goHostLogin">Perdi o ecrã do anfitrião de uma prova</button>`;
+    <button class="btn primary" data-act="goCreate">Nova prova</button>
+    <button class="textbtn" data-act="goHostLogin">Recuperar uma prova</button>`;
   }
   return `${brand}
   <div class="card">
@@ -747,34 +780,34 @@ function homeView() {
 
 function joinView() {
   return `
-  <div class="brand"><div class="glass" aria-hidden="true">🍷</div><h1>Olá!</h1>
+  <div class="brand">${LOGO}<h1>Bem-vindo</h1>
     <p class="lead">Prova <b>${esc(S.joinCode)}</b></p></div>
   <div class="card">
     <label for="name" style="margin-top:0">O seu nome</label>
     <input id="name" data-keep autocomplete="given-name" maxlength="40" data-enter="join">
-    <button class="btn primary" data-act="join">Entrar na prova</button>
+    <button class="btn primary" data-act="join">Entrar</button>
   </div>
   <button class="textbtn" data-act="home">Voltar</button>`;
 }
 
 function createView() {
   return `
-  <h1>Criar uma prova</h1>
+  <div class="brand">${LOGO}<h1>Nova prova</h1></div>
   <div class="card">
     <label for="name" style="margin-top:0">O seu nome</label>
     <input id="name" data-keep autocomplete="given-name" maxlength="40" data-enter="create">
-    <button class="btn green" data-act="create">Criar a prova</button>
+    <button class="btn primary" data-act="create">Criar</button>
   </div>
   <button class="textbtn" data-act="home">Voltar</button>`;
 }
 
 function hostLoginView() {
   return `
-  <h1>Voltar a ser anfitrião</h1>
+  <div class="brand">${LOGO}<h1>Recuperar prova</h1></div>
   <div class="card">
     <label for="code" style="margin-top:0">Código da prova</label>
     <input id="code" data-keep maxlength="4" autocapitalize="characters" autocomplete="off">
-    <label for="pin">PIN do anfitrião</label>
+    <label for="pin">PIN</label>
     <input id="pin" data-keep inputmode="numeric" maxlength="4" autocomplete="off">
     <label for="name">O seu nome</label>
     <input id="name" data-keep autocomplete="given-name" maxlength="40" data-enter="hostLogin">
@@ -784,7 +817,7 @@ function hostLoginView() {
 }
 
 function topBar(me) {
-  return `<div class="top"><span>Prova <b>${esc(S.code)}</b> · ${esc(me.name)}</span>
+  return `<div class="top"><span><span class="code">${esc(S.code)}</span>${esc(me.name)}</span>
     <button class="smallbtn" data-act="leave">Sair</button></div>`;
 }
 
@@ -818,9 +851,9 @@ function winesCard() {
       ${factsLine(w) ? `<span class="sub">${esc(factsLine(w))}</span>` : ''}
       ${S.isHost || owners(w).length > 1 ? `<span class="sub">de ${esc(broughtBy(w))}</span>` : ''}
       <div class="acts">
-        ${S.guests.length > 1 ? `<button class="smallbtn" data-act="editOwners" data-id="${esc(w.id)}">${open ? 'Fechar' : 'De quem é?'}</button>` : ''}
+        ${S.guests.length > 1 ? `<button class="smallbtn" data-act="editOwners" data-id="${esc(w.id)}">${open ? 'Fechar' : 'Pessoas'}</button>` : ''}
         <button class="smallbtn" data-act="delWine" data-id="${esc(w.id)}">Remover</button></div>
-      ${open ? `<div class="share-box"><b>De quem é esta garrafa?</b>
+      ${open ? `<div class="share-box"><b>De quem é?</b>
         ${ownerPills(S.guests, id => owns(w, id), 'toggleOwner', ` data-id="${esc(w.id)}"`)}
         <button class="btn outline" data-act="editOwners" data-id="${esc(w.id)}">Feito</button></div>` : ''}
     </div>`;
@@ -830,19 +863,19 @@ function winesCard() {
     ? `<span class="label">De quem é?</span>
        <div id="newOwners">${ownerPills(S.guests, id => id === S.guestId, 'pill')}</div>`
     : others.length
-      ? `<span class="label">Comprou a meias com alguém?</span>
+      ? `<span class="label">A meias com</span>
          <div id="newOwners">${ownerPills(others, () => false, 'pill')}</div>`
       : '';
 
   return `<div class="card">
     <h2>${S.isHost ? 'Garrafas (' + S.wines.length + ')' : 'As suas garrafas'}</h2>
-    ${list.length ? list.map(item).join('') : '<p class="empty">Ainda nenhuma.</p>'}
-    ${full ? `<p class="small">Chegou ao máximo de ${MAX_WINES} garrafas.</p>` : `<div class="add-form">
-      <label for="wName">Registar garrafa</label>
+    ${list.length ? list.map(item).join('') : '<p class="empty">Nenhuma garrafa.</p>'}
+    ${full ? `<p class="small">Máximo de ${MAX_WINES} garrafas.</p>` : `<div class="add-form">
+      <label for="wName">Nova garrafa</label>
       <input id="wName" data-keep maxlength="80" placeholder="Nome do vinho" data-enter="addWine">
       ${S.showMore
         ? fieldInputs(DETAIL_FIELDS, 'w_', {}, () => 'data-keep')
-        : '<button class="textbtn" style="margin:4px 0 0" data-act="toggleMore">+ País, região, ano, castas (opcional)</button>'}
+        : '<button class="textbtn" style="margin:4px 0 0" data-act="toggleMore">+ País, região, ano, castas</button>'}
       ${ownersField}
       <button class="btn primary" data-act="addWine">Registar</button></div>`}
   </div>`;
@@ -852,22 +885,20 @@ function setupView(me) {
   if (!S.isHost) {
     return `${topBar(me)}
     ${winesCard()}
-    <div class="waiting">À espera que cheguem todos<br>
-      <span class="small">${plural(S.wines.length, 'garrafa', 'garrafas')} até agora</span></div>`;
+    <div class="waiting">À espera de todos</div>`;
   }
   const url = location.origin + location.pathname + '?e=' + S.code;
-  const invite = `<div class="card host center">
-        <h2>Apontem a câmara para entrar</h2>
+  const invite = `<div class="card host center invite">
+        <h2>Entrar na prova</h2>
         <div id="qr" aria-label="Código QR para entrar"></div>
-        <p class="small">Ou abram ${esc(url.replace(/^https?:\/\//, '').replace(/\?.*$/, ''))} com o código</p>
         <span class="bigcode">${esc(S.code)}</span>
-        <p class="small">O seu PIN de anfitrião: <b>${esc(S.event.hostPin)}</b></p>
+        <p class="small">${esc(url.replace(/^https?:\/\//, '').replace(/\/?\?.*$/, ''))} · PIN ${esc(S.event.hostPin)}</p>
       </div>`;
   return `${topBar(me)}
   ${invite}
   <div class="card">
     <h2>Pessoas (${S.guests.length})</h2>
-    ${S.guests.map(g => `<div class="list-row"><span><b>${esc(g.name)}</b>${g.id === S.guestId ? ' (você)' : ''}</span>
+    ${S.guests.map(g => `<div class="list-row"><span><b>${esc(g.name)}</b></span>
       ${g.id !== S.guestId ? `<button class="smallbtn" data-act="delGuest" data-id="${esc(g.id)}">Remover</button>` : ''}</div>`).join('')}
   </div>
   ${winesCard()}
@@ -880,19 +911,19 @@ function prepView(me) {
   if (!S.isHost) {
     return `${topBar(me)}
     <div class="stage"><div class="bigicon" aria-hidden="true">🍾</div><h1>A preparar as garrafas</h1></div>
-    <div class="waiting">A prova começa daqui a pouco.<br>
-      <span class="small">Notas de 0 a ${maxScore()}. Cada nota só pode ser dada ${perScore()} vezes.</span></div>`;
+    <div class="waiting">Já vai começar
+      <span class="small">Notas de 0 a ${maxScore()} · cada nota no máximo ${perScore()} vezes</span></div>`;
   }
   return `${topBar(me)}
-  <div class="stage"><div class="bigicon" aria-hidden="true">🍾</div><h1>Preparar as ${n} garrafas</h1></div>
+  <div class="stage"><div class="bigicon" aria-hidden="true">🍾</div><h1>Preparar as garrafas</h1></div>
   <div class="card host">
     <ol class="steps">
       <li>Passe cada vinho para uma garrafa igual.</li>
-      <li>Esconda de quem é (ex.: nome num papel debaixo da garrafa).</li>
+      <li>Tape o nome.</li>
       <li>Baralhe e numere de 1 a ${n}.</li>
     </ol>
-    <button class="btn green" data-act="beginTasting">Começar a provar</button>
-    <button class="textbtn" data-act="backToSetup">Voltar à lista de garrafas</button>
+    <button class="btn primary" data-act="beginTasting">Começar a prova</button>
+    <button class="textbtn" data-act="backToSetup">Voltar à lista</button>
   </div>`;
 }
 
@@ -900,11 +931,11 @@ function prepView(me) {
 function hostTastingPanel() {
   const miss = missingVotes();
   return `<div class="card host">
-    <h2>${miss.length ? 'Ainda falta votar' : 'Todos votaram em tudo ✓'}</h2>
+    <h2>${miss.length ? 'Falta votar' : 'Todos votaram ✓'}</h2>
     ${miss.map(m => `<div class="list-row"><span><b>${esc(m.g.name)}</b>
       <span class="sub">${m.miss.length === 1 ? 'vinho ' : 'vinhos '}${listPt(m.miss.map(String))}</span></span>
       ${m.g.id !== S.guestId ? `<button class="smallbtn" data-act="markLeft" data-id="${esc(m.g.id)}">Já saiu</button>` : ''}</div>`).join('')}
-    <button class="btn green" data-act="finish">Terminar a prova</button>
+    <button class="btn primary" data-act="finish">Terminar a prova</button>
   </div>`;
 }
 
@@ -912,13 +943,12 @@ function guessCard(n) {
   const g = (S.guesses[S.guestId] || {})[n] || {};
   const filled = FIELDS.some(f => g[f.k]);
   if (!S.showGuess) {
-    return `<button class="btn outline" data-act="toggleGuess">${filled ? 'Ver o meu palpite ✓' : 'Adivinhar este vinho (opcional)'}</button>`;
+    return `<button class="btn outline" data-act="toggleGuess">${filled ? 'O meu palpite ✓' : 'Adivinhar o vinho'}</button>`;
   }
   return `<div class="card">
-    <h2>O meu palpite: vinho ${n}</h2>
-    <p class="small">Só por curiosidade, não conta para a classificação. Guarda-se sozinho.</p>
+    <h2>Palpite · vinho ${n}</h2>
     <div data-guess-for="${n}">${fieldInputs(FIELDS, 'g_', g, () => 'data-guess')}</div>
-    <button class="btn outline" data-act="toggleGuess">Fechar o palpite</button>
+    <button class="btn outline" data-act="toggleGuess">Fechar</button>
   </div>`;
 }
 
@@ -958,8 +988,7 @@ function tastingView(me) {
   <div class="scores">${grid}</div>
   ${guessCard(n)}
   <div class="card">
-    <h2>As suas notas (${done} de ${total})</h2>
-    <p class="small">Pode votar por qualquer ordem e mudar até o anfitrião terminar.</p>
+    <h2>As suas notas · ${done} de ${total}</h2>
     <div class="chips">${chips}</div>
   </div>
   ${S.isHost ? hostTastingPanel() : ''}`;
@@ -979,26 +1008,25 @@ function revealView(me) {
     const pick = mine[k] || '';
     const opts = S.wines.map(o => {
       let at = 0; Object.keys(mine).forEach(b => { if (mine[b] === o.id && +b !== k) at = +b; });
-      return `<option value="${esc(o.id)}"${pick === o.id ? ' selected' : ''}>${label(o)}${at ? ' · disse que é a ' + at : ''}</option>`;
+      return `<option value="${esc(o.id)}"${pick === o.id ? ' selected' : ''}>${label(o)}${at ? ' · garrafa ' + at : ''}</option>`;
     }).join('');
     const win = m[k] && S.wines.find(w => w.id === m[k].wid);
     rows += `<div class="reveal-row"><span class="tag-num">${k}</span><div class="rv">
       <select data-reveal="${k}" aria-label="Que vinho estava na garrafa ${k}"><option value="">Que vinho é?</option>${opts}</select>
-      <span class="sub">${win ? `Maioria: <span class="majority">${label(win)}</span> (${plural(m[k].n, 'voto', 'votos')} de ${voters(k)})` : 'Ainda sem votos'}</span>
+      <span class="sub">${win ? `<span class="majority">${label(win)}</span> · ${m[k].n} de ${plural(voters(k), 'voto', 'votos')}` : 'Sem votos'}</span>
     </div></div>`;
   }
   const left = bottlesWithoutMajority();
   return `${topBar(me)}
   <div class="stage"><div class="bigicon" aria-hidden="true">🎁</div><h1>A revelação</h1>
-    <p class="lead">Destapem as garrafas. Cada um diz que vinho estava em cada número; conta a maioria.</p></div>
+    <p class="lead">Que vinho estava em cada garrafa?</p></div>
   <div class="card">${rows}</div>
   ${S.isHost ? `<div class="card host">
-      <button class="btn green" style="margin-top:0" data-act="showResults" ${left.length ? 'disabled' : ''}>Mostrar resultados a todos</button>
+      <button class="btn primary" style="margin-top:0" data-act="showResults" ${left.length ? 'disabled' : ''}>Mostrar resultados</button>
       <button class="textbtn" data-act="backToTasting">Voltar à prova</button></div>`
     : DEMO ? `<div class="card host">
-        <button class="btn green" style="margin-top:0" data-act="showResults" ${left.length ? 'disabled' : ''}>Ver os resultados</button>
-        <p class="small">Numa prova a sério, é o anfitrião que mostra os resultados a todos.</p></div>`
-    : '<div class="waiting">Os resultados aparecem quando o anfitrião terminar.</div>'}`;
+        <button class="btn primary" style="margin-top:0" data-act="showResults" ${left.length ? 'disabled' : ''}>Ver resultados</button></div>`
+    : '<div class="waiting">Os resultados vêm já</div>'}`;
 }
 
 /* --- results --- */
@@ -1042,7 +1070,7 @@ function resultsView(me) {
 
   return `${topBar(me)}
   <h1 class="center">Resultados</h1>
-  ${winners.length > 1 ? '<p class="center lead">Empate no primeiro lugar!</p>' : ''}
+  ${winners.length > 1 ? '<p class="center lead">Empate!</p>' : ''}
   ${winners.map(w => `<div class="winner reveal">
     <div class="medal" aria-hidden="true">🏆</div>
     <div class="wname">${esc(w.name)}</div>
@@ -1052,7 +1080,6 @@ function resultsView(me) {
   </div>`).join('')}
   <div class="card">
     <h2>Classificação</h2>
-    <p class="small">Toque num vinho para ver mais.</p>
     ${rows.map(r => `<details class="rank"><summary>
       <div class="rk${medal(r) ? ' medal' : ''}">${medal(r) || (r.rank || '–')}</div>
       <div class="info"><b>${esc(r.name)}</b>${owns(r, S.guestId) ? '<span class="mine-tag">seu</span>' : ''}
@@ -1067,28 +1094,28 @@ function resultsView(me) {
       </div>
     </details>`).join('')}
   </div>
-  ${guessers.length ? `<div class="card"><h2>Palpites certos</h2>
+  ${guessers.length ? `<div class="card"><h2>Palpites</h2>
     ${guessers.map(x => `<div class="nrow"><span>${esc(x.g.name)}</span><b>${x.right} de ${x.tried}</b></div>`).join('')}</div>` : ''}
   ${S.isHost ? `<button class="textbtn" data-act="reopen">Corrigir a revelação</button>
-    <button class="textbtn" data-act="newTasting">Criar uma prova nova</button>`
+    <button class="textbtn" data-act="newTasting">Nova prova</button>`
     : DEMO ? '<button class="btn outline" data-act="leave">Experimentar outra vez</button>' : ''}`;
 }
 
 function view() {
-  const ribbon = DEMO ? '<div class="ribbon">Demonstração: está numa prova a decorrer.<br>Experimente dar nota aos vinhos. Nada fica guardado.</div>' : '';
+  const ribbon = DEMO ? '<div class="ribbon">Demonstração · experimente avaliar os vinhos</div>' : '';
   return ribbon + screen();
 }
 
 function screen() {
-  if (!fs) return '<p class="center lead" style="margin-top:40vh">Sem ligação. Verifique a internet e recarregue a página.</p>';
+  if (!fs) return '<p class="center lead" style="margin-top:40vh">Sem ligação. Verifique a internet.</p>';
   if (!S.code) {
-    if (DEMO) return '<p class="center lead" style="margin-top:30vh">A preparar a demonstração…</p>';
+    if (DEMO) return '<p class="center lead" style="margin-top:40vh">A carregar…</p>';
     if (S.view === 'join') return joinView();
     if (S.view === 'create' && S.canCreate) return createView();
     if (S.view === 'hostLogin' && S.canCreate) return hostLoginView();
     return homeView();
   }
-  if (!S.event || !S.guestsLoaded) return '<p class="center lead" style="margin-top:40vh">A carregar a prova…</p>';
+  if (!S.event || !S.guestsLoaded) return '<p class="center lead" style="margin-top:40vh">A carregar…</p>';
   const me = S.guests.find(g => g.id === S.guestId);
   if (!me) return '<p class="center lead" style="margin-top:40vh">A carregar…</p>';
   const ph = S.event.phase;
@@ -1150,7 +1177,7 @@ $app.addEventListener('click', e => {
   busy = true;
   Promise.resolve().then(() => fn(b.dataset, b)).catch(err => {
     console.error(err);
-    toast('Não funcionou. Verifique a ligação à internet e tente novamente.');
+    toast('Não funcionou. Verifique a internet.');
   }).finally(() => { busy = false; });
 });
 $app.addEventListener('keydown', e => {
@@ -1294,7 +1321,7 @@ const Demo = {
       const mine = myScores();
       for (let k = 1; k <= e.total; k++) if (mine[k] == null) return;
       Demo.finished = true;
-      toast('Votou em todos os vinhos! O anfitrião vai terminar a prova.', 'ok');
+      toast('Votou em todos! A prova vai terminar.', 'ok');
       setTimeout(() => fs.collection('events').doc('DEMO').update({ phase: 'reveal' }), 3500);
     }
     if (e.phase === 'reveal' && !Demo.revealed) {
@@ -1335,7 +1362,8 @@ async function isOutdated() {
   fs = firebase.firestore();
   // Some routers, mobile networks and antivirus proxies hold back Firestore's streaming connection,
   // so live updates never arrive. Long polling works everywhere and is plenty fast for a dinner table.
-  fs.settings({ experimentalForceLongPolling: true, experimentalAutoDetectLongPolling: false, merge: true });
+  // Each poll is answered within 10 s (default 30 s), so a network that holds replies back delays updates by at most ~10 s.
+  fs.settings({ experimentalForceLongPolling: true, experimentalAutoDetectLongPolling: false, experimentalLongPollingOptions: { timeoutSeconds: 10 }, merge: true });
 
   // Only the host link (?anfitriao=<secret>) can create tastings. The plain link only joins one with a code.
   const key = PARAMS.get('anfitriao');
