@@ -241,7 +241,7 @@ const MAX_WINES = 20;   // 11 scores x 2 = 22, enough for 20 bottles
 /* Only phones that opened the host link (?anfitriao=...) can create tastings.
    This is the SHA-256 of that secret, so the secret itself is not in the page. */
 /* Bump APP_VERSION and write the same text in version.txt on every change, so phones pick up the new page. */
-const APP_VERSION = '2026-10-12.1';
+const APP_VERSION = '2026-10-12.3';
 
 const HOST_HASH = '49214f3a6d9f8fdf74917bea9434172be1b120fa94d96739f5c2c57320a5e5dd';
 
@@ -379,6 +379,13 @@ async function syncWakeLock() {
   } catch (e) {} finally { wakeBusy = false; }
 }
 document.addEventListener('visibilitychange', syncWakeLock);
+
+/* A phone whose screen went off may come back with a dead connection, and Firestore can wait half a minute
+   before retrying. When the screen comes back, reconnect at once. */
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || DEMO || !fs || !fs.disableNetwork) return;
+  fs.disableNetwork().then(() => fs.enableNetwork()).catch(() => {});
+});
 
 /* ---------- live data ---------- */
 function stopEvent() {
@@ -722,15 +729,19 @@ async function saveRevealVote(k, wineId) {
 
 /* ---------- screens ---------- */
 function homeView() {
-  return `
-  <div class="brand"><div class="glass" aria-hidden="true">🍷</div><h1>Prova Cega de Vinhos</h1></div>
+  const brand = '<div class="brand"><div class="glass" aria-hidden="true">🍷</div><h1>Prova Cega de Vinhos</h1></div>';
+  // Host link: the host only creates tastings (or gets back to one); guests use the plain link with a code.
+  if (S.canCreate) {
+    return `${brand}
+    <button class="btn green" data-act="goCreate">Criar uma prova</button>
+    <button class="textbtn" data-act="goHostLogin">Perdi o ecrã do anfitrião de uma prova</button>`;
+  }
+  return `${brand}
   <div class="card">
     <label for="code" style="margin-top:0">Código da prova</label>
     <input id="code" data-keep maxlength="4" autocapitalize="characters" autocomplete="off" placeholder="ex.: KTRB" data-enter="goJoin">
     <button class="btn primary" data-act="goJoin">Entrar</button>
-  </div>
-  ${S.canCreate ? `<button class="btn green" data-act="goCreate">Criar uma prova</button>
-    <button class="textbtn" data-act="goHostLogin">Perdi o ecrã do anfitrião de uma prova</button>` : ''}`;
+  </div>`;
 }
 
 
